@@ -86,6 +86,16 @@
  ],
  "stalk": [
   {
+   "sym": "ETON",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Eton Pharmaceuticals, Inc. - Common Stock",
+    "close": 63.65,
+    "atr50": 2.35
+   }
+  },
+  {
    "sym": "PRCH",
    "tags": [],
    "added": "2026-11-18",
