@@ -72,6 +72,16 @@
  ],
  "stalk": [
   {
+   "sym": "MYGN",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Myriad Genetics, Inc. - Common Stock",
+    "close": 5.54,
+    "atr50": 1.17
+   }
+  },
+  {
    "sym": "ARDT",
    "tags": [],
    "added": "2026-11-18",
