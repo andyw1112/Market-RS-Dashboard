@@ -308,7 +308,9 @@
     $("#scan-cols").innerHTML = `<p class="placeholder">Scanner data not available</p>`;
   }
 
-  // ---------- Stalk list / Focus list (localStorage) ----------
+  // ---------- Today / Focus / Stalk lists ----------
+  // Stored in the repo (data/watchlists.json) through the GitHub API: everyone can read,
+  // only a browser holding the owner's GitHub token can edit. localStorage is just a cache.
   const WL_KEY = "watchlists.v1";
   const WL_LISTS = [
     { key: "today", title: "Today", color: "#38bdf8" },
@@ -324,19 +326,165 @@
   const DRAG_TYPE = "application/x-rs-symbol";
   const wl = { quotes: {}, state: { today: [], focus: [], stalk: [] } };
 
-  function wlLoad() {
-    try {
-      const s = JSON.parse(localStorage.getItem(WL_KEY) || "{}");
-      WL_LISTS.forEach((l) => { wl.state[l.key] = Array.isArray(s[l.key]) ? s[l.key] : []; });
-    } catch (_) { /* keep empty */ }
-  }
-  const wlSave = () => localStorage.setItem(WL_KEY, JSON.stringify(wl.state));
   const normSym = (s) => String(s || "").trim().toUpperCase().replace(/\./g, "-").replace(/[^A-Z0-9^=-]/g, "");
+  function normState(s) {
+    const out = {};
+    WL_LISTS.forEach((l) => {
+      out[l.key] = (Array.isArray(s && s[l.key]) ? s[l.key] : []).filter((e) => e && e.sym).map((e) => ({
+        sym: normSym(e.sym), tags: Array.isArray(e.tags) ? e.tags : [], added: String(e.added || ""),
+        ...(e.snap ? { snap: e.snap } : {}),
+      }));
+    });
+    return out;
+  }
+
+  function wlLoad() {
+    try { wl.state = normState(JSON.parse(localStorage.getItem(WL_KEY) || "{}")); } catch (_) { /* keep */ }
+  }
+  const wlCache = () => localStorage.setItem(WL_KEY, JSON.stringify(wl.state));
+  function wlSave() {
+    wlCache();
+    ghScheduleSave();
+  }
+
+  // ---------- GitHub sync ----------
+  const GH = { owner: "andyw1112", repo: "Market-RS-Dashboard", path: "data/watchlists.json", branch: "main" };
+  const GH_API = `https://api.github.com/repos/${GH.owner}/${GH.repo}`;
+  const TOKEN_KEY = "gh-token.v1";
+  const sync = { token: localStorage.getItem(TOKEN_KEY) || "", sha: null, timer: null, saving: false, again: false };
+  const canEdit = () => !!sync.token;
+
+  const b64enc = (str) => {
+    let bin = "";
+    new TextEncoder().encode(str).forEach((b) => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  };
+  const b64dec = (b64) => new TextDecoder().decode(Uint8Array.from(atob(b64.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+  const ghHeaders = () => ({
+    Accept: "application/vnd.github+json",
+    ...(sync.token ? { Authorization: `Bearer ${sync.token}` } : {}),
+  });
+
+  function syncStatus(text, cls = "") {
+    const el = $("#wl-sync");
+    el.textContent = text;
+    el.className = `wl-sync ${cls}`;
+  }
+
+  async function ghGet() {
+    const r = await fetch(`${GH_API}/contents/${GH.path}?ref=${GH.branch}&t=${Date.now()}`,
+      { headers: ghHeaders(), cache: "no-store" });
+    if (r.status === 404) return { state: null, sha: null };
+    if (!r.ok) throw new Error(`GitHub ${r.status}`);
+    const j = await r.json();
+    return { state: normState(JSON.parse(b64dec(j.content))), sha: j.sha };
+  }
+
+  async function ghPut() {
+    const body = {
+      message: "watchlists: update",
+      content: b64enc(JSON.stringify(wl.state, null, 1) + "\n"),
+      branch: GH.branch,
+      // keep the owner's real e-mail out of the public history
+      committer: { name: GH.owner, email: "264357720+andyw1112@users.noreply.github.com" },
+      ...(sync.sha ? { sha: sync.sha } : {}),
+    };
+    const r = await fetch(`${GH_API}/contents/${GH.path}`, {
+      method: "PUT", headers: { ...ghHeaders(), "Content-Type": "application/json" }, body: JSON.stringify(body),
+    });
+    if (r.status === 409 || r.status === 422) { // file changed elsewhere: take the new sha, our edit wins
+      sync.sha = (await ghGet()).sha;
+      throw Object.assign(new Error("conflict"), { retry: true });
+    }
+    if (r.status === 401 || r.status === 403) throw new Error("token 冇權限或者過咗期");
+    if (!r.ok) throw new Error(`GitHub ${r.status}`);
+    sync.sha = (await r.json()).content.sha;
+  }
+
+  function ghScheduleSave() {
+    if (!canEdit()) return;
+    syncStatus("未儲存…", "busy");
+    clearTimeout(sync.timer);
+    sync.timer = setTimeout(ghSave, 1200);
+  }
+
+  async function ghSave() {
+    if (sync.saving) { sync.again = true; return; }
+    sync.saving = true;
+    syncStatus("同步緊 GitHub…", "busy");
+    try {
+      try { await ghPut(); } catch (e) { if (e.retry) await ghPut(); else throw e; }
+      syncStatus("✓ 已同步 GitHub", "ok");
+    } catch (e) {
+      syncStatus(`⚠ 同步失敗：${e.message}（改動仲喺呢個 browser）`, "err");
+    } finally {
+      sync.saving = false;
+      if (sync.again) { sync.again = false; ghSave(); }
+    }
+  }
+
+  async function ghLoad() {
+    syncStatus("讀取緊 GitHub…", "busy");
+    try {
+      const { state, sha } = await ghGet();
+      sync.sha = sha;
+      if (state) {
+        wl.state = state;
+        wlCache();
+      } else if (canEdit() && WL_LISTS.some((l) => wl.state[l.key].length)) {
+        ghSave(); // first sync: upload what this browser already has
+      }
+      syncStatus(canEdit() ? "✓ 已同步 GitHub" : "唯讀", canEdit() ? "ok" : "");
+    } catch (e) {
+      // API rate limit for anonymous visitors (60/h): fall back to the copy deployed with the site
+      if (!canEdit()) {
+        try { wl.state = normState(await load("watchlists.json")); } catch (_) { /* keep cache */ }
+        syncStatus("唯讀（可能慢幾分鐘）");
+      } else {
+        syncStatus(`⚠ 讀唔到 GitHub：${e.message}，顯示呢個 browser 嘅版本`, "err");
+      }
+    }
+    renderLists();
+  }
+
+  async function ghConnect() {
+    if (canEdit()) {
+      if (!confirm("喺呢個 browser 移除 GitHub token？之後呢度會變唯讀。")) return;
+      localStorage.removeItem(TOKEN_KEY);
+      sync.token = "";
+      applyMode();
+      return;
+    }
+    const t = (prompt(`貼上你嘅 GitHub fine-grained token\n（只揀 ${GH.repo} 呢個 repo，Contents: Read and write）`) || "").trim();
+    if (!t) return;
+    syncStatus("檢查緊 token…", "busy");
+    try {
+      const r = await fetch(GH_API, { headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${t}` } });
+      const j = r.ok ? await r.json() : null;
+      if (!j || !j.permissions || !j.permissions.push) throw new Error("token 冇呢個 repo 嘅寫入權限");
+    } catch (e) {
+      syncStatus(`⚠ ${e.message}`, "err");
+      return;
+    }
+    sync.token = t;
+    localStorage.setItem(TOKEN_KEY, t);
+    applyMode();
+    ghLoad();
+  }
+
+  function applyMode() {
+    $("#sec-lists").classList.toggle("readonly", !canEdit());
+    $("#wl-connect").textContent = canEdit() ? "🔓 已連接" : "🔑 連接 GitHub";
+    $("#wl-connect").title = canEdit() ? "撳嚟喺呢個 browser 移除 token" : "貼 GitHub token 先可以編輯";
+    $("#wl-import").disabled = !canEdit();
+    if (!canEdit()) syncStatus("唯讀");
+    renderLists();
+  }
 
   // Add (or move) `sym` into `list`; a stock lives in one list at a time and keeps its tags when moved.
   function wlAdd(list, sym, snap) {
     sym = normSym(sym);
-    if (!sym) return;
+    if (!sym || !canEdit()) return;
     let entry = null;
     WL_LISTS.forEach((l) => {
       const i = wl.state[l.key].findIndex((e) => e.sym === sym);
@@ -362,9 +510,10 @@
     const q = wl.quotes[e.sym];
     const [name, close, pct, atr50, thrust, rs1m] = q || [e.snap?.name, e.snap?.close, null, e.snap?.atr50, null, null];
     const stale = !q;
-    const tags = TAGS.map((t) => `<button class="tag ${e.tags.includes(t.key) ? "on" : ""}" data-tag="${t.key}"
+    const ro = canEdit() ? "" : "disabled";
+    const tags = TAGS.map((t) => `<button class="tag ${e.tags.includes(t.key) ? "on" : ""}" data-tag="${t.key}" ${ro}
         title="${t.tip ? `${t.label} – ${t.tip}` : t.label}">${t.icon}</button>`).join("");
-    return `<tr draggable="true" data-sym="${escapeHtml(e.sym)}" class="${stale ? "stale" : ""}"
+    return `<tr draggable="${canEdit()}" data-sym="${escapeHtml(e.sym)}" class="${stale ? "stale" : ""}"
         title="${stale ? "冇今日數據（唔夠流動性或者 ticker 唔啱），顯示上次見到嘅數" : ""}">
       <td class="tags">${tags}</td>
       <td class="ticker" title="${escapeHtml(shortName(name))}"><a href="https://finance.yahoo.com/quote/${encodeURIComponent(e.sym)}" target="_blank" rel="noopener">${escapeHtml(e.sym)}</a></td>
@@ -383,7 +532,7 @@
       const box = $(`.wl[data-list="${l.key}"]`), items = wl.state[l.key];
       $(".wl-count", box).textContent = items.length;
       $("tbody", box).innerHTML = items.map((e) => wlRow(l.key, e)).join("")
-        || `<tr><td colspan="9" class="empty">${l.key === "today" ? "打 ticker 加" : "拖 stock 落嚟"}</td></tr>`;
+        || `<tr><td colspan="9" class="empty">${!canEdit() ? "Empty" : l.key === "today" ? "打 ticker 加" : "拖 stock 落嚟"}</td></tr>`;
     });
   }
 
@@ -411,7 +560,7 @@
       });
       box.addEventListener("click", (ev) => {
         const tr = ev.target.closest("tr[data-sym]");
-        if (!tr) return;
+        if (!tr || !canEdit()) return;
         const list = wl.state[l.key], i = list.findIndex((e) => e.sym === tr.dataset.sym);
         if (i < 0) return;
         const tag = ev.target.closest(".tag");
@@ -429,7 +578,7 @@
         if (tr) ev.dataTransfer.setData(DRAG_TYPE, tr.dataset.sym);
       });
       box.addEventListener("dragover", (ev) => {
-        if (!ev.dataTransfer.types.includes(DRAG_TYPE)) return;
+        if (!canEdit() || !ev.dataTransfer.types.includes(DRAG_TYPE)) return;
         ev.preventDefault();
         ev.dataTransfer.dropEffect = "copy";
         box.classList.add("drop");
@@ -465,24 +614,21 @@
     $("#wl-import").addEventListener("change", async (ev) => {
       const f = ev.target.files[0];
       ev.target.value = "";
-      if (!f) return;
+      if (!f || !canEdit()) return;
       try {
         const s = JSON.parse(await f.text());
         if (!WL_LISTS.some((l) => Array.isArray(s[l.key]))) throw new Error("not a watchlist file");
         if (!confirm("用呢個 file 取代而家嘅 Today / Focus / Stalk list？")) return;
-        WL_LISTS.forEach((l) => {
-          wl.state[l.key] = (s[l.key] || []).filter((e) => e && e.sym).map((e) => ({
-            sym: normSym(e.sym), tags: Array.isArray(e.tags) ? e.tags : [], added: String(e.added || ""), snap: e.snap,
-          }));
-        });
+        wl.state = normState(s);
         wlSave();
         renderLists();
       } catch (err) {
         alert("Import 唔到：" + err.message);
       }
     });
-    window.addEventListener("storage", (ev) => { if (ev.key === WL_KEY) { wlLoad(); renderLists(); } });
-    renderLists();
+    $("#wl-connect").addEventListener("click", ghConnect);
+    applyMode();
+    ghLoad();
   }
 
   // ---------- header ----------

@@ -251,3 +251,11 @@ footer { color: var(--muted); font-size: 12px; margin-top: 18px; max-width: 900p
 @media (max-width: 1400px) { .wl-grid { grid-template-columns: minmax(0, 1fr); } }
 .wl-table td.heat { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 .wl-table td.tags { width: 1%; }
+.wl-sync { font-size: 11px; color: var(--muted); }
+.wl-sync.ok { color: var(--pos); }
+.wl-sync.busy { color: var(--warn); }
+.wl-sync.err { color: var(--neg); }
+#sec-lists.readonly .wl-add, #sec-lists.readonly .rm, #sec-lists.readonly label.btn { display: none; }
+#sec-lists.readonly .tag { cursor: default; }
+#sec-lists.readonly .tag:not(.on) { visibility: hidden; }
+#sec-lists.readonly .wl-table tr[draggable] { cursor: default; }

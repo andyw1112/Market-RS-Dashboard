@@ -75,12 +75,13 @@
     <div class="scan-cols" id="scan-cols"><p class="placeholder">Loading…</p></div>
   </section>
 
-  <!-- 5. Today / Focus / Stalk lists (saved in this browser) -->
+  <!-- 5. Today / Focus / Stalk lists (data/watchlists.json, editable with the owner's GitHub token) -->
   <section class="panel" id="sec-lists">
     <div class="panel-head">
       <h2>Today · Focus · Stalk</h2>
       <div class="wl-tools">
-        <span class="sub">由 scanner 拖 stock 落嚟，或者打 ticker 加 · 存喺呢個 browser</span>
+        <span class="wl-sync" id="wl-sync"></span>
+        <button class="btn" id="wl-connect"></button>
         <button class="btn" id="wl-export" title="Download lists as a JSON file">Export</button>
         <label class="btn" title="Load lists from a JSON file">Import<input type="file" id="wl-import" accept=".json,application/json" hidden></label>
       </div>

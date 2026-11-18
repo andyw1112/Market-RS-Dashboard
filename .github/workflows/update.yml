@@ -54,6 +54,7 @@ jobs:
             echo "No new trading day - nothing to commit."
           else
             git commit -m "data: $(python -c 'import json;print(json.load(open("data/latest.json"))["as_of"])')"
+            git pull --rebase origin main   # watchlists.json may have been edited from the site meanwhile
             git push
           fi
 
