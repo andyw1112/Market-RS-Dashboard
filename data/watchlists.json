@@ -1,6 +1,11 @@
 {
  "today": [
   {
+   "sym": "SNOW",
+   "tags": [],
+   "added": "2026-11-18"
+  },
+  {
    "sym": "RKLB",
    "tags": [
     "flag"
