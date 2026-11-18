@@ -24,16 +24,6 @@
  ],
  "focus": [
   {
-   "sym": "PRCH",
-   "tags": [],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Porch Group, Inc. - Common Stock",
-    "close": 20.51,
-    "atr50": 1.75
-   }
-  },
-  {
    "sym": "CDNA",
    "tags": [
     "fw"
@@ -95,6 +85,16 @@
   }
  ],
  "stalk": [
+  {
+   "sym": "PRCH",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Porch Group, Inc. - Common Stock",
+    "close": 20.51,
+    "atr50": 1.75
+   }
+  },
   {
    "sym": "SG",
    "tags": [
