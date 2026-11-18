@@ -32,7 +32,9 @@
  "stalk": [
   {
    "sym": "LQDA",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Liquidia Corporation - Common Stock",
