@@ -73,7 +73,9 @@
  "stalk": [
   {
    "sym": "MYGN",
-   "tags": [],
+   "tags": [
+    "fw"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Myriad Genetics, Inc. - Common Stock",
