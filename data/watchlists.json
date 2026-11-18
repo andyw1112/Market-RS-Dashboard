@@ -2,7 +2,9 @@
  "today": [
   {
    "sym": "SNOW",
-   "tags": [],
+   "tags": [
+    "fw"
+   ],
    "added": "2026-11-18"
   },
   {
