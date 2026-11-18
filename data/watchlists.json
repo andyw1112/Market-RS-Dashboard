@@ -25,7 +25,9 @@
  "focus": [
   {
    "sym": "GMAB",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Genmab A/S - American Depositary Shares",
@@ -35,7 +37,9 @@
   },
   {
    "sym": "SG",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Sweetgreen, Inc. Class A Common Stock",
