@@ -25,7 +25,9 @@
  "focus": [
   {
    "sym": "CDNA",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "CareDx, Inc. - Common Stock",
