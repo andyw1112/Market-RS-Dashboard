@@ -85,7 +85,9 @@
   },
   {
    "sym": "ARDT",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Ardent Health, Inc. Common Stock",
