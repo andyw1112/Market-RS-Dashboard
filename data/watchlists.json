@@ -24,6 +24,16 @@
  ],
  "focus": [
   {
+   "sym": "SG",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Sweetgreen, Inc. Class A Common Stock",
+    "close": 12.18,
+    "atr50": 2.91
+   }
+  },
+  {
    "sym": "HELE",
    "tags": [
     "flag"
