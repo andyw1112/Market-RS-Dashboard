@@ -2,7 +2,9 @@
  "today": [
   {
    "sym": "RKLB",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18"
   },
   {
