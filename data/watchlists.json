@@ -58,6 +58,16 @@
  ],
  "stalk": [
   {
+   "sym": "TRUP",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Trupanion, Inc. - Common Stock",
+    "close": 36.55,
+    "atr50": 4.51
+   }
+  },
+  {
    "sym": "REPL",
    "tags": [],
    "added": "2026-11-18",
