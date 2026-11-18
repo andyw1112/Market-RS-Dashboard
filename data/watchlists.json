@@ -15,6 +15,17 @@
    "added": "2026-11-18"
   }
  ],
- "focus": [],
+ "focus": [
+  {
+   "sym": "GKOS",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Glaukos Corporation Common Stock",
+    "close": 243.25,
+    "atr50": 3.94
+   }
+  }
+ ],
  "stalk": []
 }
