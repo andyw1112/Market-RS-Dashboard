@@ -121,7 +121,9 @@
   },
   {
    "sym": "VRDN",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Viridian Therapeutics, Inc.  - Common Stock",
