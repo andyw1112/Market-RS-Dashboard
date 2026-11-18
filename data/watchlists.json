@@ -38,6 +38,16 @@
  ],
  "stalk": [
   {
+   "sym": "REPL",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Replimune Group, Inc. - Common Stock",
+    "close": 19.69,
+    "atr50": 2.75
+   }
+  },
+  {
    "sym": "VRDN",
    "tags": [],
    "added": "2026-11-18",
