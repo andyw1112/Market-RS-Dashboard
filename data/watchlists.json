@@ -24,6 +24,16 @@
  ],
  "focus": [
   {
+   "sym": "HELE",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Helen of Troy Limited - Common Stock",
+    "close": 37.13,
+    "atr50": 3.52
+   }
+  },
+  {
    "sym": "ENOV",
    "tags": [],
    "added": "2026-11-18",
