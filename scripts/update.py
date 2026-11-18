@@ -178,6 +178,10 @@ def update_scanner(as_of: str) -> None:
     except Exception as e:  # noqa: BLE001
         log.warning("scanner failed: %s", e)
         return
+    if res["with_data"] < 0.5 * res["universe"]:  # Yahoo rate limit / outage -> keep yesterday's file
+        log.warning("scanner: only %d of %d stocks downloaded, keeping previous scanner.json",
+                    res["with_data"], res["universe"])
+        return
     res["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     write_json(SCANNER, res, compact=True)
     log.info("scanner: %d liquid of %d | %s", res["liquid"], res["universe"],

@@ -232,3 +232,35 @@ def test_scanner_sorted_by_dollar_volume(monkeypatch):
     res = scanner.run_scans({k: k for k in data}, data, as_of)
     high52 = next(s for s in res["scans"] if s["key"] == "high52")
     assert [i["symbol"] for i in high52["items"]] == ["HIGH", "MID", "LOW"]
+
+
+def test_scanner_atr_from_ema50_matches_index_condition():
+    from compute import condition_row
+    idx = pd.bdate_range("2025-01-01", periods=300)
+    close = pd.Series([50 + i * 0.3 + (i % 5) for i in range(300)], index=idx, dtype=float)
+    df = pd.DataFrame({"Open": close, "High": close + 1, "Low": close - 1, "Close": close, "Volume": 1_000_000})
+    m = evaluate(df)
+    assert m["atr50"] == pytest.approx(condition_row(df, None)["atr_from_50"], abs=0.01)
+
+
+def test_scanner_quotes_for_watchlists(monkeypatch):
+    import scanner
+    monkeypatch.setattr(scanner, "fetch_meta", lambda syms: {s: {"market_cap": 1e9} for s in syms})
+    data = {"AAA": _stock([50.0] * 300), "TINY": _stock([50.0] * 300, vol=10)}
+    as_of = data["AAA"].index[-1].date().isoformat()
+    res = scanner.run_scans({"AAA": "Alpha", "TINY": "Tiny"}, data, as_of)
+    assert set(res["quotes"]) == {"AAA"}            # only liquid stocks
+    name, close, pct_1d, atr50, thrust, rs_1m = res["quotes"]["AAA"]
+    assert (name, close, pct_1d) == ("Alpha", 50.0, 0.0)
+
+
+def test_stock_rs_vs_rsp():
+    from scanner import stock_rs
+    idx = pd.bdate_range("2025-01-01", periods=60)
+    bench = pd.Series(100.0, index=idx)
+    up = pd.Series([10 + i for i in range(60)], index=idx, dtype=float)
+    assert stock_rs(up, bench) == (100.0, 100.0)
+    # flat, with one lower day 3 days ago -> ties do not count
+    flat = pd.Series(10.0, index=idx); flat.iloc[-4] = 9.0
+    assert stock_rs(flat, bench) == (16.7, 5.0)  # 1 of 6 / 1 of 20
+    assert stock_rs(up, None) == (None, None)

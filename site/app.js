@@ -285,11 +285,13 @@
             const badge = sc.days ? `+${it.gain.toFixed(0)}%` : `${it.off_high.toFixed(1)}%`;
             const hot = (it.etfs || []).filter((e) => strong.has(e));
             const tip = [
-              it.name, `$${it.close} · ${dvolFmt(it.dollar_vol)}/day${it.market_cap ? ` · cap ${capFmt(it.market_cap)}` : ""}`,
+              it.name, `$${it.close} · ${dvolFmt(it.dollar_vol)}/day${it.atr50 != null ? ` · ATR× ${it.atr50.toFixed(1)}` : ""}${it.market_cap ? ` · cap ${capFmt(it.market_cap)}` : ""}`,
               [it.sector, it.industry].filter(Boolean).join(" / "),
               hot.length ? `Strong sector: ${hot.map((e) => `${e} ${strong.get(e)}%`).join(", ")}` : "",
             ].filter(Boolean).join("\n");
-            return `<a class="scan-item ${hot.length ? "strong" : ""}" href="https://finance.yahoo.com/quote/${encodeURIComponent(it.symbol)}" target="_blank" rel="noopener"
+            const snap = JSON.stringify({ name: it.name, close: it.close, atr50: it.atr50 });
+            return `<a class="scan-item ${hot.length ? "strong" : ""}" draggable="true" data-sym="${escapeHtml(it.symbol)}"
+                data-snap="${escapeHtml(snap)}" href="https://finance.yahoo.com/quote/${encodeURIComponent(it.symbol)}" target="_blank" rel="noopener"
                 title="${escapeHtml(tip)}">
               <span class="scan-sym">${escapeHtml(it.symbol)}</span>
               ${hot.length ? `<span class="scan-etf">${escapeHtml(hot[0])}</span>` : ""}
@@ -304,6 +306,183 @@
 
   function scannerUnavailable() {
     $("#scan-cols").innerHTML = `<p class="placeholder">Scanner data not available</p>`;
+  }
+
+  // ---------- Stalk list / Focus list (localStorage) ----------
+  const WL_KEY = "watchlists.v1";
+  const WL_LISTS = [
+    { key: "today", title: "Today", color: "#38bdf8" },
+    { key: "focus", title: "Focus list", color: "#f472b6" },
+    { key: "stalk", title: "Stalk list", color: "#a78bfa" },
+  ];
+  const TAGS = [
+    { key: "flag", icon: "🚩", label: "Flag" },
+    { key: "cwh", icon: "☕", label: "CWH", tip: "Cup with handle" },
+    { key: "fw", icon: "📐", label: "FW", tip: "Falling wedge" },
+    { key: "peg", icon: "⚡", label: "PEG", tip: "Power earnings gap" },
+  ];
+  const DRAG_TYPE = "application/x-rs-symbol";
+  const wl = { quotes: {}, state: { today: [], focus: [], stalk: [] } };
+
+  function wlLoad() {
+    try {
+      const s = JSON.parse(localStorage.getItem(WL_KEY) || "{}");
+      WL_LISTS.forEach((l) => { wl.state[l.key] = Array.isArray(s[l.key]) ? s[l.key] : []; });
+    } catch (_) { /* keep empty */ }
+  }
+  const wlSave = () => localStorage.setItem(WL_KEY, JSON.stringify(wl.state));
+  const normSym = (s) => String(s || "").trim().toUpperCase().replace(/\./g, "-").replace(/[^A-Z0-9^=-]/g, "");
+
+  // Add (or move) `sym` into `list`; a stock lives in one list at a time and keeps its tags when moved.
+  function wlAdd(list, sym, snap) {
+    sym = normSym(sym);
+    if (!sym) return;
+    let entry = null;
+    WL_LISTS.forEach((l) => {
+      const i = wl.state[l.key].findIndex((e) => e.sym === sym);
+      if (i >= 0) entry = wl.state[l.key].splice(i, 1)[0];
+    });
+    entry = entry || { sym, tags: [], added: new Date().toISOString().slice(0, 10) };
+    if (snap) entry.snap = snap; // last seen values, shown if the stock drops out of today's data
+    wl.state[list].unshift(entry);
+    wlSave();
+    renderLists();
+  }
+
+  // "Applovin Corporation - Class A Common Stock" -> "Applovin Corporation"
+  const shortName = (n) => String(n || "").replace(/\s+-\s+.*$/, "").replace(/,?\s+(Common Stock|Ordinary Shares|American Depositary Shares).*$/i, "");
+
+  function atrCell(v) {
+    if (v == null) return `<td class="num">–</td>`;
+    const a = Math.abs(v), cls = a > 8 ? "atr-red" : a > 4 ? "atr-yellow" : "";
+    return `<td class="num ${cls}">${v.toFixed(1)}</td>`;
+  }
+
+  function wlRow(list, e) {
+    const q = wl.quotes[e.sym];
+    const [name, close, pct, atr50, thrust, rs1m] = q || [e.snap?.name, e.snap?.close, null, e.snap?.atr50, null, null];
+    const stale = !q;
+    const tags = TAGS.map((t) => `<button class="tag ${e.tags.includes(t.key) ? "on" : ""}" data-tag="${t.key}"
+        title="${t.tip ? `${t.label} – ${t.tip}` : t.label}">${t.icon}</button>`).join("");
+    return `<tr draggable="true" data-sym="${escapeHtml(e.sym)}" class="${stale ? "stale" : ""}"
+        title="${stale ? "冇今日數據（唔夠流動性或者 ticker 唔啱），顯示上次見到嘅數" : ""}">
+      <td class="tags">${tags}</td>
+      <td class="ticker" title="${escapeHtml(shortName(name))}"><a href="https://finance.yahoo.com/quote/${encodeURIComponent(e.sym)}" target="_blank" rel="noopener">${escapeHtml(e.sym)}</a></td>
+      <td class="num">${close == null ? "–" : fmtNum(close)}</td>
+      <td class="num ${signClass(pct)}">${fmtPct(pct, 1)}</td>
+      <td class="heat" style="${heatStyle(thrust)}">${fmtScore(thrust)}</td>
+      <td class="heat" style="${heatStyle(rs1m)}">${fmtScore(rs1m)}</td>
+      ${atrCell(atr50)}
+      <td class="added">${escapeHtml(e.added.slice(5))}</td>
+      <td><button class="rm" title="Remove">×</button></td>
+    </tr>`;
+  }
+
+  function renderLists() {
+    WL_LISTS.forEach((l) => {
+      const box = $(`.wl[data-list="${l.key}"]`), items = wl.state[l.key];
+      $(".wl-count", box).textContent = items.length;
+      $("tbody", box).innerHTML = items.map((e) => wlRow(l.key, e)).join("")
+        || `<tr><td colspan="9" class="empty">${l.key === "today" ? "打 ticker 加" : "拖 stock 落嚟"}</td></tr>`;
+    });
+  }
+
+  function initLists() {
+    wlLoad();
+    $("#wl-legend").innerHTML = TAGS.map((t) => `${t.icon} ${t.label}${t.tip ? ` = ${t.tip}` : ""}`).join(" · ")
+      + ` · 撳 icon 開 / 熄 · RS Thrust % / 1-Mth RS % = 今日 RS（÷ RSP）高過之前 6 / 20 日嘅比例 · ATR× = (收市 − daily 50 EMA) ÷ ATR(28)，&gt;4 黃、&gt;8 紅 · 行可以喺 list 之間拖（一隻股票只會喺一個 list）`;
+    WL_LISTS.forEach((l) => {
+      const box = $(`.wl[data-list="${l.key}"]`);
+      box.style.setProperty("--c", l.color);
+      box.innerHTML = `
+        <div class="wl-head"><span class="wl-title">${l.title}</span><span class="wl-count">0</span>
+          <form class="wl-add"><input placeholder="+ Ticker" maxlength="10" aria-label="Add ticker to ${l.title}"></form></div>
+        <div class="table-wrap"><table class="wl-table"><thead><tr>
+          <th>Remarks</th><th>Ticker</th><th class="num">Close</th><th class="num">% 1D</th>
+          <th class="num" title="今日 RS（股價 ÷ RSP）高過之前 1–6 日嘅比例">RS Thrust %</th>
+          <th class="num" title="今日 RS（股價 ÷ RSP）高過之前 1–20 日嘅比例">1-Mth RS %</th>
+          <th class="num" title="(Close − daily 50 EMA) ÷ ATR(28)">ATR×</th><th>Added</th><th></th>
+        </tr></thead><tbody></tbody></table></div>`;
+      $("form", box).addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        const inp = $("input", box);
+        inp.value.split(/[\s,]+/).forEach((s) => s && wlAdd(l.key, s));
+        inp.value = "";
+      });
+      box.addEventListener("click", (ev) => {
+        const tr = ev.target.closest("tr[data-sym]");
+        if (!tr) return;
+        const list = wl.state[l.key], i = list.findIndex((e) => e.sym === tr.dataset.sym);
+        if (i < 0) return;
+        const tag = ev.target.closest(".tag");
+        if (tag) {
+          const t = tag.dataset.tag, tags = list[i].tags;
+          list[i].tags = tags.includes(t) ? tags.filter((x) => x !== t) : [...tags, t];
+        } else if (ev.target.closest(".rm")) {
+          list.splice(i, 1);
+        } else return;
+        wlSave();
+        renderLists();
+      });
+      box.addEventListener("dragstart", (ev) => {
+        const tr = ev.target.closest && ev.target.closest("tr[data-sym]");
+        if (tr) ev.dataTransfer.setData(DRAG_TYPE, tr.dataset.sym);
+      });
+      box.addEventListener("dragover", (ev) => {
+        if (!ev.dataTransfer.types.includes(DRAG_TYPE)) return;
+        ev.preventDefault();
+        ev.dataTransfer.dropEffect = "copy";
+        box.classList.add("drop");
+      });
+      box.addEventListener("dragleave", (ev) => { if (!box.contains(ev.relatedTarget)) box.classList.remove("drop"); });
+      box.addEventListener("drop", (ev) => {
+        ev.preventDefault();
+        box.classList.remove("drop");
+        const sym = ev.dataTransfer.getData(DRAG_TYPE);
+        let snap = null;
+        try { snap = JSON.parse(ev.dataTransfer.getData(DRAG_TYPE + "+snap") || "null"); } catch (_) { /* none */ }
+        if (sym) wlAdd(l.key, sym, snap);
+      });
+    });
+
+    // scanner items are the drag source
+    $("#scan-cols").addEventListener("dragstart", (ev) => {
+      const a = ev.target.closest && ev.target.closest(".scan-item");
+      if (!a) return;
+      ev.dataTransfer.setData(DRAG_TYPE, a.dataset.sym);
+      ev.dataTransfer.setData(DRAG_TYPE + "+snap", a.dataset.snap || "null");
+      ev.dataTransfer.effectAllowed = "copy";
+    });
+
+    $("#wl-export").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(wl.state, null, 2)], { type: "application/json" });
+      const a = Object.assign(document.createElement("a"), {
+        href: URL.createObjectURL(blob), download: `rs-watchlists-${new Date().toISOString().slice(0, 10)}.json`,
+      });
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    $("#wl-import").addEventListener("change", async (ev) => {
+      const f = ev.target.files[0];
+      ev.target.value = "";
+      if (!f) return;
+      try {
+        const s = JSON.parse(await f.text());
+        if (!WL_LISTS.some((l) => Array.isArray(s[l.key]))) throw new Error("not a watchlist file");
+        if (!confirm("用呢個 file 取代而家嘅 Today / Focus / Stalk list？")) return;
+        WL_LISTS.forEach((l) => {
+          wl.state[l.key] = (s[l.key] || []).filter((e) => e && e.sym).map((e) => ({
+            sym: normSym(e.sym), tags: Array.isArray(e.tags) ? e.tags : [], added: String(e.added || ""), snap: e.snap,
+          }));
+        });
+        wlSave();
+        renderLists();
+      } catch (err) {
+        alert("Import 唔到：" + err.message);
+      }
+    });
+    window.addEventListener("storage", (ev) => { if (ev.key === WL_KEY) { wlLoad(); renderLists(); } });
+    renderLists();
   }
 
   // ---------- header ----------
@@ -345,10 +524,13 @@
   });
 
   load("calendar.json").then(renderCalendar).catch(calendarUnavailable);
+  initLists();
   Promise.all([load("scanner.json"), load().catch(() => null)]).then(([scan, latest]) => {
     const strong = new Map((latest ? latest.rows : [])
       .filter((r) => r.status === "ok" && r.group === "Sectors / Themes" && r.rs_1m >= SECTOR_MIN_RS1M)
       .map((r) => [r.ticker, r.rs_1m]));
     renderScanner(scan, strong);
+    wl.quotes = scan.quotes || {};
+    renderLists();
   }).catch(scannerUnavailable);
 })();

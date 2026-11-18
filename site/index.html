@@ -75,6 +75,24 @@
     <div class="scan-cols" id="scan-cols"><p class="placeholder">Loading…</p></div>
   </section>
 
+  <!-- 5. Today / Focus / Stalk lists (saved in this browser) -->
+  <section class="panel" id="sec-lists">
+    <div class="panel-head">
+      <h2>Today · Focus · Stalk</h2>
+      <div class="wl-tools">
+        <span class="sub">由 scanner 拖 stock 落嚟，或者打 ticker 加 · 存喺呢個 browser</span>
+        <button class="btn" id="wl-export" title="Download lists as a JSON file">Export</button>
+        <label class="btn" title="Load lists from a JSON file">Import<input type="file" id="wl-import" accept=".json,application/json" hidden></label>
+      </div>
+    </div>
+    <div class="wl-grid">
+      <div class="wl" data-list="today"></div>
+      <div class="wl" data-list="focus"></div>
+      <div class="wl" data-list="stalk"></div>
+    </div>
+    <p class="wl-legend" id="wl-legend"></p>
+  </section>
+
   <footer>
     <p>
       <b>RS Thrust %</b> = 今日 RS（ETF ÷ RSP）高過之前 1–6 日嘅日數比例；

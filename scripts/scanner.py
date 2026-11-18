@@ -23,6 +23,10 @@ from pathlib import Path
 import pandas as pd
 import yfinance as yf
 
+from compute import MONTH_LOOKBACK, THRUST_LOOKBACK, atr, rs_rank_pct
+
+BENCH = "RSP"
+
 log = logging.getLogger(__name__)
 
 SYMDIR = "https://www.nasdaqtrader.com/dynamic/SymDir/{}.txt"
@@ -168,7 +172,16 @@ def map_etfs(sector: str | None, industry: str | None, rules) -> list[str]:
 
 
 # ------------------------------------------------------------------ rules
-def evaluate(df: pd.DataFrame) -> dict | None:
+def stock_rs(close: pd.Series, bench: pd.Series | None) -> tuple[float | None, float | None]:
+    """RS Thrust % / 1-Mth RS % vs RSP: share of the previous 6 / 20 days whose RS (close / RSP) is below today's."""
+    if bench is None:
+        return None, None
+    j = pd.concat([close.rename("c"), bench.rename("b")], axis=1, join="inner").dropna()
+    rs = (j["c"] / j["b"]).tolist()
+    return rs_rank_pct(rs, THRUST_LOOKBACK), rs_rank_pct(rs, MONTH_LOOKBACK)
+
+
+def evaluate(df: pd.DataFrame, bench: pd.Series | None = None) -> dict | None:
     """Compute scan metrics for one stock; None if it fails the base filters."""
     c = df["Close"]
     close = float(c.iloc[-1])
@@ -179,11 +192,17 @@ def evaluate(df: pd.DataFrame) -> dict | None:
         return None
     ema50 = float(c.ewm(span=50, adjust=False).mean().iloc[-1]) if len(c) >= 50 else None
     high52 = float(df["High"].iloc[-HIGH_52W_DAYS:].max())
+    a = atr(df).iloc[-1] if len(c) >= 50 else float("nan")
+    atr50 = round((close - ema50) / float(a), 2) if ema50 is not None and a == a and a > 0 else None
+    thrust, rs_1m = stock_rs(c, bench)
     m = {
         "close": round(close, 2),
+        "thrust": thrust,
+        "rs_1m": rs_1m,
         "pct_1d": round((close / float(c.iloc[-2]) - 1) * 100, 2) if len(c) > 1 else None,
         "dollar_vol": round(dvol),
         "above_ema50": ema50 is not None and close > ema50,
+        "atr50": atr50,  # (close - daily 50 EMA) / ATR(28), same as Index condition
         "off_high": round((close / high52 - 1) * 100, 2),
         "date": df.index[-1].date().isoformat(),
     }
@@ -204,13 +223,14 @@ def passes(s: Scan, m: dict) -> bool:
     return m["off_high"] >= -NEAR_HIGH_PCT
 
 
-def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str) -> dict:
+def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
+              bench: pd.Series | None = None) -> dict:
     metrics = {}
     for sym, df in data.items():
         if df.index[-1].date().isoformat() != as_of:  # stale / halted
             continue
         try:
-            m = evaluate(df)
+            m = evaluate(df, bench)
         except Exception as e:  # noqa: BLE001
             log.debug("%s: %s", sym, e)
             continue
@@ -230,7 +250,7 @@ def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str) 
                 continue
             mt = meta.get(sym) or {}
             hits.append({"symbol": sym, "name": names.get(sym, ""), **{k: m[k] for k in (
-                "close", "pct_1d", "dollar_vol", "off_high")},
+                "close", "pct_1d", "dollar_vol", "off_high", "atr50", "thrust", "rs_1m")},
                 "gain": m.get(f"gain{s.days}") if s.days else None,
                 "market_cap": mt.get("market_cap"), "sector": mt.get("sector"), "industry": mt.get("industry"),
                 "etfs": map_etfs(mt.get("sector"), mt.get("industry"), rules)})
@@ -245,11 +265,19 @@ def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str) 
         "rules": {"min_price": MIN_PRICE, "min_dollar_vol": MIN_DOLLAR_VOL, "min_market_cap": MIN_MARKET_CAP,
                   "dollar_vol_days": DOLLAR_VOL_DAYS, "near_high_pct": NEAR_HIGH_PCT},
         "scans": out,
+        # every liquid stock, for the Stalk / Focus lists
+        "quote_fields": ["name", "close", "pct_1d", "atr50", "thrust", "rs_1m"],
+        "quotes": {sym: [names.get(sym, ""), m["close"], m["pct_1d"], m["atr50"], m["thrust"], m["rs_1m"]]
+                   for sym, m in sorted(metrics.items())},
     }
 
 
 def scan(as_of: str) -> dict:
     names = load_universe()
     log.info("scanner universe: %d stocks", len(names))
-    data = download(sorted(names))
-    return run_scans(names, data, as_of)
+    data = download(sorted(names) + [BENCH])
+    bench_df = data.pop(BENCH, None)
+    if bench_df is None:
+        log.warning("scanner: no %s data, RS columns will be empty", BENCH)
+    names.pop(BENCH, None)
+    return run_scans(names, data, as_of, None if bench_df is None else bench_df["Close"])
