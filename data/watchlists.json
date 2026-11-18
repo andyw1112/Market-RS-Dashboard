@@ -31,6 +31,16 @@
  ],
  "stalk": [
   {
+   "sym": "VRDN",
+   "tags": [],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Viridian Therapeutics, Inc.  - Common Stock",
+    "close": 30.06,
+    "atr50": 4.34
+   }
+  },
+  {
    "sym": "AXGN",
    "tags": [
     "flag"
