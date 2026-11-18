@@ -109,7 +109,9 @@
   },
   {
    "sym": "REPL",
-   "tags": [],
+   "tags": [
+    "flag"
+   ],
    "added": "2026-11-18",
    "snap": {
     "name": "Replimune Group, Inc. - Common Stock",
