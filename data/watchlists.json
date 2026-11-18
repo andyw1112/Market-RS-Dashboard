@@ -32,7 +32,9 @@
  "stalk": [
   {
    "sym": "SLS",
-   "tags": [],
+   "tags": [
+    "peg"
+   ],
    "added": "2026-11-18"
   }
  ]
