@@ -1,6 +1,11 @@
 {
  "today": [
   {
+   "sym": "RKLB",
+   "tags": [],
+   "added": "2026-11-18"
+  },
+  {
    "sym": "AAPL",
    "tags": [
     "flag"
