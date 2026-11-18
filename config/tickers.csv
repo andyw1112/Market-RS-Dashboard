@@ -1,0 +1,173 @@
+group,ticker,name
+Index / Macro,RSP,Invesco S&P 500 Equal Weight ETF
+Index / Macro,SPY,State Street SPDR S&P 500 ETF Trust
+Index / Macro,QQQ,"Invesco QQQ Trust, Series 1"
+Index / Macro,IWM,iShares Russell 2000 ETF
+Index / Macro,DIA,State Street SPDR Dow Jones Indust Avg ETF Trust
+Index / Macro,SPMO,Invesco S&P 500 Momentum ETF
+Index / Macro,MAGS,Roundhill Magnificent Seven ETF
+Index / Macro,SOXX,iShares Semiconductor ETF
+Index / Macro,TLT,iShares 20+ Year Treasury Bond ETF
+Index / Macro,GLD,SPDR Gold Trust
+Index / Macro,USO,United States Oil Fund LP
+Sectors / Themes,XRPI,XRP ETF
+Sectors / Themes,ARKX,ARK Space & Defense Innovation ETF
+Sectors / Themes,NASA,Tema Space Innovators ETF
+Sectors / Themes,KURE,KraneShares MSCI All China Health Care Index ETF
+Sectors / Themes,XT,Ishares Future Exponential Technologies ETF
+Sectors / Themes,GBTC,Grayscale Bitcoin Trust ETF
+Sectors / Themes,IBIT,iShares Bitcoin Trust ETF
+Sectors / Themes,ARKQ,ARK Autonomous Technology & Robotics ETF
+Sectors / Themes,ARKG,ARK Genomic Revolution ETF
+Sectors / Themes,QTEC,First Trust NASDAQ-100-Technology Sector Index Fd
+Sectors / Themes,ETHE,Grayscale Ethereum Trust ETF
+Sectors / Themes,ETHA,iShares Ethereum Trust ETF
+Sectors / Themes,CLOU,Global X Cloud Computing ETF
+Sectors / Themes,SNSR,Global X Internet of Things ETF
+Sectors / Themes,FDN,First Trust Dow Jones Internet Index Fund
+Sectors / Themes,BLOK,Amplify Blockchain Technology ETF
+Sectors / Themes,SKYY,First Trust Cloud Computing ETF
+Sectors / Themes,ARKK,ARK Innovation ETF
+Sectors / Themes,XSD,State Street SPDR S&P Semiconductor ETF
+Sectors / Themes,RSPT,Invesco S&P 500 Eql Wght Technology ETF
+Sectors / Themes,METV,Roundhill Metaverse ETF
+Sectors / Themes,ARKW,ARK Next Generation Technology ETF
+Sectors / Themes,SMH,VanEck Semiconductor ETF
+Sectors / Themes,AIQ,Global X Artificial Intelligence & Technology ETF
+Sectors / Themes,BAI,iShares AI Innovation and Tech Active ETF
+Sectors / Themes,WGMI,CoinShares Bitcoin Mining and Digital Power ETF
+Sectors / Themes,CHAT,Roundhill Generative AI & Technology ETF
+Sectors / Themes,BUZZ,VanEck Social Sentiment ETF
+Sectors / Themes,MEME,Roundhill Meme Stock ETF
+Sectors / Themes,IXN,iShares Global Tech ETF
+Sectors / Themes,VGT,Vanguard Information Technology ETF
+Sectors / Themes,XLK,State Street Technology Select Sector SPDR ETF
+Sectors / Themes,CIBR,First Trust NASDAQ Cybersecurity ETF
+Sectors / Themes,HACK,Amplify Cybersecurity ETF
+Sectors / Themes,SOLZ,Solana ETF
+Sectors / Themes,XLC,State Street Com Svc Sel Sec SPDR ETF
+Sectors / Themes,ARKF,ARK Blockchain & Fintech Innovation ETF
+Sectors / Themes,BOAT,SonicShares Global Shipping ETF
+Sectors / Themes,DRAM,Roundhill Memory ETF
+Sectors / Themes,ESPO,VanEck Video Gaming and eSports ETF
+Sectors / Themes,IDGT,iShares US Digital Infra & Real Estate ETF
+Sectors / Themes,GRID,First Trust NASDAQ Cln Edge Smart Grid Infra Ix Fd
+Sectors / Themes,EWY,Ishares Msci South Korea ETF
+Sectors / Themes,HERO,Global X Video Games & Esports ETF
+Sectors / Themes,IGV,iShares Expanded Tech-Software Sector ETF
+Sectors / Themes,SVIX,-1x Short VIX Futures ETF
+Sectors / Themes,JETS,US Global Jets ETF
+Sectors / Themes,UFO,Procure Space ETF
+Sectors / Themes,BOTZ,Global X Robotics and Artificial Intelligence ETF
+Sectors / Themes,HYDR,Global X Hydrogen ETF
+Sectors / Themes,IPO,Renaissance IPO ETF
+Sectors / Themes,SOCL,Global X Social Media ETF
+Sectors / Themes,WCLD,WisdomTree Cloud Computing Fund
+Sectors / Themes,ICLN,iShares Global Clean Energy ETF
+Sectors / Themes,MJ,Amplify Alternative Harvest ETF
+Sectors / Themes,ROBO,ROBO Global Robotics and Automation Index ETF
+Sectors / Themes,SHLD,Global X Defense Tech ETF
+Sectors / Themes,QQQE,Direxion NASDAQ-100 Equal Weighted Index ETF
+Sectors / Themes,PPLT,abrdn Physical Platinum Shares ETF
+Sectors / Themes,XSW,State Street SPDR S&P Software & Services ETF
+Sectors / Themes,XTL,State Street SPDR S&P Telecom ETF
+Sectors / Themes,IHI,iShares US Medical Devices ETF
+Sectors / Themes,SLV,iShares Silver Trust
+Sectors / Themes,XLV,State Street Health Care Select Sector SPDR ETF
+Sectors / Themes,PBE,Invesco Biotechnology & Genome ETF
+Sectors / Themes,QCLN,First Trust NASDAQ Clean Edge Green Energy Idx Fd
+Sectors / Themes,DRIV,Global X Autonomous & Electric Vehicles ETF
+Sectors / Themes,CNBS,Amplify Seymour Cannabis ETF
+Sectors / Themes,ILF,iShares Latin America 40 ETF
+Sectors / Themes,KWEB,KraneShares CSI China Internet ETF
+Sectors / Themes,PPH,VanEck Pharmaceutical ETF
+Sectors / Themes,FFTY,Capforce IBD 50 ETF
+Sectors / Themes,IBB,iShares Biotechnology ETF
+Sectors / Themes,PALL,abrdn Physical Palladium Shares ETF
+Sectors / Themes,RSPH,Invesco S&P 500 Eql Wght Health Care ETF
+Sectors / Themes,FXI,iShares China Large-Cap ETF
+Sectors / Themes,GXC,State Street SPDR S&P China ETF
+Sectors / Themes,ONLN,ProShares Online Retail ETF
+Sectors / Themes,ROKT,State Street SPDR S&P Kensho Final Frontiers ETF
+Sectors / Themes,IYZ,iShares US Telecommunications ETF
+Sectors / Themes,GENZ,VanEck Digital Native Economy ETF
+Sectors / Themes,FDRV,Fidelity Electric Vehicles and Future Transpo ETF
+Sectors / Themes,PBW,Invesco WilderHill Clean Energy ETF
+Sectors / Themes,XBI,State Street SPDR S&P Biotech ETF
+Sectors / Themes,WOOD,iShares Global Timber & Forestry ETF
+Sectors / Themes,REMX,VanEck Rare Earth and Strategic Metals ETF
+Sectors / Themes,PEJ,Invesco Leisure and Entertainment ETF
+Sectors / Themes,URNM,Sprott Uranium Miners ETF
+Sectors / Themes,XAR,State Street SPDR S&P Aerospace & Defense ETF
+Sectors / Themes,IBUY,Amplify Online Retail ETF
+Sectors / Themes,COPX,Global X Copper Miners ETF
+Sectors / Themes,XLY,State Street Consumer Disc Sel Sect SPDR ETF
+Sectors / Themes,XLI,State Street Industrial Select Sector SPDR ETF
+Sectors / Themes,XHE,State Street SPDR S&P Health Care Equipment ETF
+Sectors / Themes,PAVE,Global X U.S. Infrastructure Development ETF
+Sectors / Themes,FINX,Global X FinTech ETF
+Sectors / Themes,TAN,Invesco Solar ETF
+Sectors / Themes,URA,Global X Uranium ETF
+Sectors / Themes,NLR,VanEck Uranium and Nuclear ETF
+Sectors / Themes,XHS,State Street SPDR S&P Health Care Services ETF
+Sectors / Themes,GDXJ,VanEck Junior Gold Miners ETF
+Sectors / Themes,LIT,Global X Lithium & Battery Tech ETF
+Sectors / Themes,ITA,iShares US Aerospace & Defense ETF
+Sectors / Themes,XPH,State Street SPDR S&P Pharmaceuticals ETF
+Sectors / Themes,KCE,State Street SPDR S&P Capital Markets ETF
+Sectors / Themes,IAI,iShares US Broker-Dealers & Securities Exch ETF
+Sectors / Themes,UNG,United States Natural Gas Fund LP
+Sectors / Themes,XHB,State Street SPDR S&P Homebuilders ETF
+Sectors / Themes,GDX,VanEck Gold Miners ETF
+Sectors / Themes,XTN,State Street SPDR S&P Transportation ETF
+Sectors / Themes,SILJ,Amplify Junior Silver Miners ETF
+Sectors / Themes,SIL,Global X Silver Miners ETF
+Sectors / Themes,VNQI,Vanguard Global ex-US Real Estate ETF
+Sectors / Themes,POWR,iShares US Power Infrastructure ETF
+Sectors / Themes,IGF,iShares Global Infrastructure ETF
+Sectors / Themes,RSPC,Invesco S&P 500 Equal Weight Communication Svc ETF
+Sectors / Themes,XLE,State Street Energy Select Sector SPDR ETF
+Sectors / Themes,ITB,iShares US Home Construction ETF
+Sectors / Themes,RSPD,Invesco S&P 500 Eql Wght Con DiscrtN ETF
+Sectors / Themes,REM,iShares Mortgage Real Estate ETF
+Sectors / Themes,RSPN,Invesco S&P 500 Eql Wght Industrials ETF
+Sectors / Themes,REET,iShares Global REIT ETF
+Sectors / Themes,VNQ,Vanguard Real Estate ETF
+Sectors / Themes,PHO,Invesco Water Resources ETF
+Sectors / Themes,SCHH,Schwab US REIT ETF
+Sectors / Themes,RSPF,Invesco S&P 500 Eql Wght Financials ETF
+Sectors / Themes,XME,State Street SPDR S&P Metals & Mining ETF
+Sectors / Themes,XLF,State Street Financial Sel Sec SPDR ETF
+Sectors / Themes,KRBN,KraneShares Global Carbon Strategy ETF
+Sectors / Themes,DXYZ,Destiny Tech100 Inc
+Sectors / Themes,XOP,State Street SPDR S&P Oil & Gas Expl & Prod ETF
+Sectors / Themes,IPAY,Amplify Digital Payments ETF
+Sectors / Themes,XRT,State Street PDR S&P Retail ETF
+Sectors / Themes,RSPR,Invesco S&P 500 Equal Weight Real Estate ETF
+Sectors / Themes,XLRE,State Street Real Estate Select Sector SPDR ETF
+Sectors / Themes,RSPG,Invesco S&P 500 Eql Wght Energy ETF
+Sectors / Themes,RSPS,Invesco S&P 500 Eql Wght Con Staples ETF
+Sectors / Themes,IYT,iShares US Transportation ETF
+Sectors / Themes,XLP,State Street Consumer Staples Sel Sect SPDR ETF
+Sectors / Themes,XLB,State Street Materials Select Sector SPDR ETF
+Sectors / Themes,RSPM,Invesco S&P 500 Eql Wght Materials ETF
+Sectors / Themes,IYM,iShares US Basic Materials ETF
+Sectors / Themes,BETZ,Roundhill Sports Betting & iGaming ETF
+Sectors / Themes,PBJ,Invesco Food & Beverage ETF
+Sectors / Themes,EVX,VanEck Environmental Services ETF
+Sectors / Themes,RSPU,Invesco S&P 500 Eql Wght Utilities ETF
+Sectors / Themes,XLU,State Street Utilities Select Sector SPDR ETF
+Sectors / Themes,KIE,State Street SPDR S&P Insurance ETF
+Sectors / Themes,KBE,State Street SPDR S&P Bank ETF
+Sectors / Themes,KRE,State Street SPDR S&P Regional Banking ETF
+Sectors / Themes,GNR,State Street SPDR S&P Global Nat Resources ETF
+Sectors / Themes,GUNR,Northern Trust Morningstar Glbl Upstm Ntrl Res ETF
+Sectors / Themes,IHF,iShares US Healthcare Providers ETF
+Sectors / Themes,ARGT,Global X MSCI Argentina ETF
+Sectors / Themes,ENFR,ALPS Alerian Energy Infrastructure ETF
+Sectors / Themes,FCG,First Trust Natural Gas ETF
+Sectors / Themes,AMLP,Alerian MLP ETF
+Sectors / Themes,SLX,VanEck Steel ETF
+Sectors / Themes,MOO,VanEck Agribusiness ETF
+Sectors / Themes,XES,State Street SPDR S&P Oil & Gas Equip & Serv ETF
+Sectors / Themes,OIH,VanEck Oil Services ETF

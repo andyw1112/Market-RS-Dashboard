@@ -1,0 +1,82 @@
+level,match,etfs
+sector,Technology,XLK VGT IXN RSPT
+sector,Healthcare,XLV RSPH
+sector,Financial Services,XLF RSPF
+sector,Consumer Cyclical,XLY RSPD
+sector,Consumer Defensive,XLP RSPS
+sector,Industrials,XLI RSPN
+sector,Energy,XLE RSPG
+sector,Basic Materials,XLB RSPM IYM
+sector,Real Estate,XLRE RSPR VNQ SCHH
+sector,Utilities,XLU RSPU
+sector,Communication Services,XLC RSPC
+industry,Semiconductor,SMH SOXX XSD
+industry,Software,IGV XSW CLOU WCLD SKYY
+industry,Software - Infrastructure,CIBR HACK
+industry,Information Technology Services,XSW
+industry,Computer Hardware,SKYY
+industry,Biotechnology,XBI IBB PBE
+industry,Drug Manufacturers,PPH XPH
+industry,Medical Devices,IHI XHE
+industry,Medical Instruments,IHI XHE
+industry,Medical Care Facilities,IHF XHS
+industry,Healthcare Plans,IHF XHS
+industry,Medical Distribution,XHS
+industry,Health Information Services,XHS
+industry,Diagnostics & Research,XHS
+industry,Insurance,KIE
+industry,Banks - Regional,KRE KBE
+industry,Banks - Diversified,KBE
+industry,Capital Markets,KCE IAI
+industry,Financial Data & Stock Exchanges,KCE IAI
+industry,Credit Services,IPAY FINX
+industry,REIT,VNQ REET SCHH XLRE
+industry,Lodging,PEJ
+industry,Restaurants,PEJ
+industry,Leisure,PEJ
+industry,Entertainment,PEJ
+industry,Travel Services,PEJ
+industry,Resorts & Casinos,PEJ BETZ
+industry,Gambling,BETZ
+industry,Airlines,JETS
+industry,Trucking,IYT XTN
+industry,Railroads,IYT XTN
+industry,Integrated Freight,IYT XTN
+industry,Marine Shipping,BOAT IYT
+industry,Aerospace & Defense,ITA XAR SHLD
+industry,Residential Construction,ITB XHB
+industry,Building Products,ITB XHB
+industry,Engineering & Construction,PAVE GRID
+industry,Infrastructure Operations,PAVE IGF
+industry,Specialty Retail,XRT
+industry,Discount Stores,XRT
+industry,Apparel Retail,XRT
+industry,Department Stores,XRT
+industry,Internet Retail,IBUY ONLN XRT
+industry,Oil & Gas E&P,XOP
+industry,Oil & Gas Equipment,OIH XES
+industry,Oil & Gas Midstream,AMLP ENFR
+industry,Oil & Gas Integrated,XLE
+industry,Gold,GDX GDXJ
+industry,Silver,SIL SILJ
+industry,Copper,COPX
+industry,Steel,SLX
+industry,Uranium,URA URNM NLR
+industry,Other Industrial Metals,XME REMX
+industry,Solar,TAN
+industry,Utilities - Renewable,ICLN
+industry,Utilities - Regulated Water,PHO
+industry,Telecom Services,IYZ XTL
+industry,Communication Equipment,XTL
+industry,Internet Content & Information,FDN SOCL
+industry,Electronic Gaming & Multimedia,ESPO HERO
+industry,Farm Products,MOO
+industry,Agricultural Inputs,MOO
+industry,Packaged Foods,PBJ
+industry,Beverages,PBJ
+industry,Confectioners,PBJ
+industry,Food Distribution,PBJ
+industry,Waste Management,EVX
+industry,Auto Manufacturers,DRIV
+industry,Auto Parts,DRIV
+industry,Lumber & Wood,WOOD

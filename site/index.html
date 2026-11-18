@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RS Thrust Rate Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    (function () {
+      var t = localStorage.getItem("theme");
+      if (t) document.documentElement.dataset.theme = t;
+    })();
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>RS Thrust Rate Dashboard</h1>
+      <p class="meta">
+        <span id="asof">Loading…</span>
+        <span class="sep">·</span>
+        <span id="updated"></span>
+        <span class="sep">·</span>
+        <span>Benchmark: <b>RSP</b></span>
+      </p>
+    </div>
+    <button id="theme-toggle" class="icon-btn" title="Toggle dark mode" aria-label="Toggle dark mode">◐</button>
+  </header>
+
+  <!-- 1. Index / Macro -->
+  <section class="panel" id="sec-index">
+    <div class="table-wrap"><table class="rs-table" id="tbl-index"></table></div>
+  </section>
+
+  <!-- 2. Index condition + Sector RS 90% above -->
+  <div class="row-2">
+    <section class="panel" id="sec-cond">
+      <h2>Index condition</h2>
+      <div id="cond"></div>
+    </section>
+
+    <section class="panel" id="sec-sector">
+      <div class="panel-head">
+        <h2 id="sector-title">Sector RS 90% above</h2>
+        <label class="toggle"><input type="checkbox" id="show-all-sectors"> 顯示全部</label>
+      </div>
+      <div class="table-wrap"><table class="rs-table" id="tbl-sector"></table></div>
+    </section>
+  </div>
+
+  <!-- 3. Financial calendar -->
+  <section class="panel" id="sec-cal">
+    <div class="panel-head">
+      <h2>Financial calendar <span class="sub" id="cal-week"></span></h2>
+      <span class="sub">時間顯示香港時間（HKT）</span>
+    </div>
+    <div class="cal-grid">
+      <div>
+        <h3>Economic data <span class="sub">US · high impact</span></h3>
+        <div id="cal-econ"><p class="placeholder">Loading…</p></div>
+      </div>
+      <div>
+        <h3>Earnings <span class="sub" id="cal-cap"></span></h3>
+        <div id="cal-earn"><p class="placeholder">Loading…</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Stocks scanner (to be defined) -->
+  <section class="panel scanner" id="sec-scanner">
+    <div class="panel-head">
+      <h2>Stocks scanner <span class="sub" id="scan-meta"></span></h2>
+      <span class="sub" id="scan-rules"></span>
+    </div>
+    <div class="scan-cols" id="scan-cols"><p class="placeholder">Loading…</p></div>
+  </section>
+
+  <footer>
+    <p>
+      <b>RS Thrust %</b> = 今日 RS（ETF ÷ RSP）高過之前 1–6 日嘅日數比例；
+      <b>1-Mth RS %</b> = 高過之前 1–20 日嘅比例。RS 用收市價（非 Adj Close）。
+      RS sparkline 虛線 = 今日 RS 水平，綠柱 = 今日 RS 高過嗰日。
+    </p>
+    <p>Data: Yahoo Finance via yfinance. Not investment advice.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
