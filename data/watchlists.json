@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "BRBR",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "BellRing Brands, Inc. Common Stock ",
+    "close": 13.66,
+    "atr50": 6.06
+   }
+  },
+  {
    "sym": "FIGS",
    "tags": [],
    "added": "2026-11-19",
