@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "RYTM",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "Rhythm Pharmaceuticals, Inc. - Common Stock",
+    "close": 119.04,
+    "atr50": 3.21
+   }
+  },
+  {
    "sym": "ARHS",
    "tags": [],
    "added": "2026-11-19",
