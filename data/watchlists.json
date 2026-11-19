@@ -22,6 +22,18 @@
  ],
  "focus": [
   {
+   "sym": "AXGN",
+   "tags": [
+    "flag"
+   ],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Axogen, Inc. - Common Stock",
+    "close": 56.95,
+    "atr50": 4.04
+   }
+  },
+  {
    "sym": "LTH",
    "tags": [
     "cwh"
@@ -66,18 +78,6 @@
   }
  ],
  "stalk": [
-  {
-   "sym": "AXGN",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Axogen, Inc. - Common Stock",
-    "close": 56.95,
-    "atr50": 4.04
-   }
-  },
   {
    "sym": "APP",
    "tags": [],
