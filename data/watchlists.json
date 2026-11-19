@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "NUAI",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "New Era Energy & Digital, Inc. - Common Stock",
+    "close": 3.99,
+    "atr50": 0.39
+   }
+  },
+  {
    "sym": "LFTO",
    "tags": [],
    "added": "2026-11-19",
