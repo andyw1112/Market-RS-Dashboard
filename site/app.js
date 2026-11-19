@@ -151,7 +151,7 @@
 
   function emaTip(t, tf) {
     if (!t) return `${tf}: not enough history`;
-    const lbl = { green: "Good", orange: "Rebound below 200 EMA", yellow: "Mixed", red: "Poor" }[t.light] || "";
+    const lbl = { green: "Good", orange: "Rebound under 200 EMA", yellow: "Mixed", red: "Poor" }[t.light] || "";
     return `${tf}: ${lbl}\n${t.ema9 != null ? `EMA9 ${fmtNum(t.ema9)} · ` : ""}EMA21 ${fmtNum(t.ema21)} · EMA50 ${fmtNum(t.ema50)} · EMA200 ${fmtNum(t.ema200)}`;
   }
 
@@ -186,7 +186,7 @@
         <ul>
           <li><span class="lamp red"></span> Red color = Poor market condition</li>
           <li><span class="lamp green"></span> Green color = Good market condition</li>
-          <li><span class="lamp orange"></span> Orange color = Rebound below 200 EMA (below 200 EMA, above 9/21/50 EMA)</li>
+          <li><span class="lamp orange"></span> Orange color = Rebound under 200 EMA (below 200 EMA, above 9/21/50 EMA)</li>
           <li><span class="rm-tag atr-yellow">&gt; 4</span> ATR% over 4 = Extended</li>
           <li><span class="rm-tag atr-red">&gt; 8</span> ATR% over 8 = Extremely extended</li>
           <li><b>VIX</b> below 15 = High risk to pullback</li>
