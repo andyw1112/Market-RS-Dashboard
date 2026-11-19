@@ -41,6 +41,8 @@ DOLLAR_VOL_DAYS = 20
 NEAR_HIGH_PCT = 3.0
 HIGH_52W_DAYS = 252
 
+NEW_LOOKBACK_DAYS = 5  # "NEW" = not in any scanner on the previous 5 trading days (about a week)
+
 CHUNK = 250
 PERIOD = "14mo"
 
@@ -223,6 +225,24 @@ def passes(s: Scan, m: dict) -> bool:
     return m["off_high"] >= -NEAR_HIGH_PCT
 
 
+def seen_recently(df: pd.DataFrame, days: int = NEW_LOOKBACK_DAYS) -> bool:
+    """Did this stock pass any scanner on one of the previous `days` trading days (today excluded)?
+
+    Rebuilt from price history, so it needs no stored scan history. Market cap isn't re-checked
+    (only today's value is known)."""
+    for k in range(1, days + 1):
+        past = df.iloc[:-k]
+        if len(past) < 30:
+            break
+        try:
+            m = evaluate(past)
+        except Exception:  # noqa: BLE001
+            continue
+        if m and any(passes(s, m) for s in SCANS):
+            return True
+    return False
+
+
 def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
               bench: pd.Series | None = None) -> dict:
     metrics = {}
@@ -239,6 +259,8 @@ def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
     candidates = sorted({sym for sym, m in metrics.items() if any(passes(s, m) for s in SCANS)})
     meta = fetch_meta(candidates)
     rules = load_sector_map()
+    new = {sym for sym in candidates if not seen_recently(data[sym])}
+    log.info("scanner: %d new (not in any scan over the previous %d days)", len(new), NEW_LOOKBACK_DAYS)
     small = sum(1 for s in candidates if not cap_ok(meta.get(s)))
     log.info("scanner: %d candidates, %d dropped by market cap < $%dM", len(candidates), small, MIN_MARKET_CAP / 1e6)
 
@@ -253,17 +275,19 @@ def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
                 "close", "pct_1d", "dollar_vol", "off_high", "atr50", "thrust", "rs_1m")},
                 "gain": m.get(f"gain{s.days}") if s.days else None,
                 "market_cap": mt.get("market_cap"), "sector": mt.get("sector"), "industry": mt.get("industry"),
-                "etfs": map_etfs(mt.get("sector"), mt.get("industry"), rules)})
+                "etfs": map_etfs(mt.get("sector"), mt.get("industry"), rules),
+                "new": sym in new})
         hits.sort(key=lambda h: -h["dollar_vol"])  # most liquid first
         out.append({"key": s.key, "title": s.title, "days": s.days, "min_gain": s.min_gain,
-                    "count": len(hits), "items": hits})
+                    "count": len(hits), "new": sum(h["new"] for h in hits), "items": hits})
     return {
         "as_of": as_of,
         "universe": len(names),
         "with_data": len(data),
         "liquid": len(metrics),
         "rules": {"min_price": MIN_PRICE, "min_dollar_vol": MIN_DOLLAR_VOL, "min_market_cap": MIN_MARKET_CAP,
-                  "dollar_vol_days": DOLLAR_VOL_DAYS, "near_high_pct": NEAR_HIGH_PCT},
+                  "dollar_vol_days": DOLLAR_VOL_DAYS, "near_high_pct": NEAR_HIGH_PCT,
+                  "new_lookback_days": NEW_LOOKBACK_DAYS},
         "scans": out,
         # every liquid stock, for the Stalk / Focus lists
         "quote_fields": ["name", "close", "pct_1d", "atr50", "thrust", "rs_1m"],

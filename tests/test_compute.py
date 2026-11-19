@@ -286,3 +286,18 @@ def test_condition_row_orange_daily_and_weekly():
     t = r["short"]
     assert t["ema9"] < r["price"] < t["ema200"] and r["price"] > t["ema50"]
     assert t["light"] == "orange" and r["long"]["light"] == "orange"
+
+
+def test_scanner_new_flag(monkeypatch):
+    import scanner
+    monkeypatch.setattr(scanner, "fetch_meta", lambda syms: {x: {"market_cap": 1e9} for x in syms})
+    old = _stock([50.0] * 300)                       # at its 52W high for weeks -> seen last week
+    fresh = _stock([50.0] * 100 + [40.0] * 199 + [50.0])  # back at the 52W high today only -> NEW
+    gone = _stock([50.0] * 290 + [40.0] * 9 + [50.0])      # last at the high 10 days ago -> NEW again
+    data = {"OLD": old, "FRESH": fresh, "BACK": gone}
+    as_of = old.index[-1].date().isoformat()
+    res = scanner.run_scans({k: k for k in data}, data, as_of)
+    high52 = next(x for x in res["scans"] if x["key"] == "high52")
+    flags = {i["symbol"]: i["new"] for i in high52["items"]}
+    assert flags == {"OLD": False, "FRESH": True, "BACK": True}
+    assert high52["new"] == 2

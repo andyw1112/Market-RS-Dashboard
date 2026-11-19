@@ -297,11 +297,13 @@
     $("#scan-meta").textContent = `${d.as_of} close · ${d.liquid.toLocaleString()} liquid of ${d.universe.toLocaleString()} US stocks`;
     const cap = d.rules.min_market_cap ? ` · Mkt cap ≥ ${capFmt(d.rules.min_market_cap)}` : "";
     $("#scan-rules").innerHTML = `Price &gt; $${d.rules.min_price} · ${d.rules.dollar_vol_days}D avg $Vol &gt; ${dvolFmt(d.rules.min_dollar_vol)}${cap}
-      · <span class="scan-legend">綠色 ticker</span> = 屬 1-Mth RS ≥ ${SECTOR_MIN_RS1M}% 嘅 sector`;
+      · <span class="scan-legend">綠色 ticker</span> = 屬 1-Mth RS ≥ ${SECTOR_MIN_RS1M}% 嘅 sector
+      · <span class="scan-new">NEW</span> = 上星期未出現過`;
+    const newDays = d.rules.new_lookback_days || 5;
     $("#scan-cols").innerHTML = d.scans.map((sc) => `
       <div class="scan-col">
         <div class="scan-head" style="--c:${SCAN_COLORS[sc.key] || "var(--accent)"}">
-          <div class="scan-count">${sc.count}</div>
+          <div class="scan-count">${sc.count}${sc.new ? ` <span class="scan-count-new">${sc.new} new</span>` : ""}</div>
           <div class="scan-title">${escapeHtml(sc.title)}</div>
           <div class="scan-sub">${scanSubtitle(sc)}</div>
         </div>
@@ -319,6 +321,7 @@
                 data-snap="${escapeHtml(snap)}" href="https://finance.yahoo.com/quote/${encodeURIComponent(it.symbol)}" target="_blank" rel="noopener"
                 title="${escapeHtml(tip)}">
               <span class="scan-sym">${escapeHtml(it.symbol)}</span>
+              ${it.new ? `<span class="scan-new" title="上星期（之前 ${newDays} 個交易日）未喺任何 scanner 出現過">NEW</span>` : ""}
               ${hot.length ? `<span class="scan-etf">${escapeHtml(hot[0])}</span>` : ""}
               <span class="scan-chg ${signClass(it.pct_1d)}">${fmtPct(it.pct_1d, 1)}</span>
               <span class="scan-badge" title="${sc.days ? `Gain from ${sc.days}D low` : "% off 52W high"}">${badge}</span>
