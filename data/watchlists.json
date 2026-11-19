@@ -22,6 +22,11 @@
  ],
  "focus": [
   {
+   "sym": "LTH",
+   "tags": [],
+   "added": "2026-11-19"
+  },
+  {
    "sym": "CDNA",
    "tags": [
     "fw"
