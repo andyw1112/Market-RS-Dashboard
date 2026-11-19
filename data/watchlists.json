@@ -67,6 +67,16 @@
  ],
  "stalk": [
   {
+   "sym": "APP",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "Applovin Corporation - Class A Common Stock",
+    "close": 390.91,
+    "atr50": 3.25
+   }
+  },
+  {
    "sym": "ENOV",
    "tags": [
     "flag"
