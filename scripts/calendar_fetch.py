@@ -11,9 +11,12 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import urllib.request
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
+
+import pandas as pd
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +26,9 @@ UA = "Mozilla/5.0 (compatible; rs-dashboard/1.0)"
 
 ECON_COUNTRY = "USD"
 ECON_IMPACT = {"High"}
-EARNINGS_MIN_CAP = 100e9  # "large-cap" = market cap >= US$100B
+EARNINGS_MIN_CAP = 10e9  # market cap >= US$10B (100億)
+EARNINGS_PAGE = 100
+OTC_FOREIGN = re.compile(r"[A-Z]{4}[FY]")  # e.g. ACGYF, NSRGY: OTC foreign shares, not US-listed
 
 
 def _get_json(url: str, timeout: int = 20):
@@ -80,14 +85,26 @@ def fetch_earnings(start: date, end: date, min_cap: float = EARNINGS_MIN_CAP) ->
     try:
         import yfinance as yf
         cal = yf.Calendars(start=start.isoformat(), end=(end + timedelta(days=1)).isoformat())
-        df = cal.get_earnings_calendar(market_cap=min_cap, limit=100)
+        pages = []
+        for offset in range(0, 1000, EARNINGS_PAGE):  # all of them, not only Yahoo's "most active"
+            page = cal.get_earnings_calendar(market_cap=min_cap, filter_most_active=False,
+                                             limit=EARNINGS_PAGE, offset=offset, force=True)
+            if page is None or page.empty:
+                break
+            pages.append(page)
+            if len(page) < EARNINGS_PAGE:
+                break
+        df = pd.concat(pages) if pages else None
     except Exception as e:  # noqa: BLE001
         log.warning("earnings calendar failed: %s", e)
         return None
     out = []
     if df is None or df.empty:
         return out
+    df = df[~df.index.duplicated()]
     for sym, r in df.iterrows():
+        if OTC_FOREIGN.fullmatch(str(sym)):
+            continue
         ts = r.get("Event Start Date")
         if ts is None or ts != ts:
             continue
@@ -109,6 +126,12 @@ def fetch_earnings(start: date, end: date, min_cap: float = EARNINGS_MIN_CAP) ->
             "eps_reported": _num(r.get("Reported EPS")),
             "surprise_pct": _num(r.get("Surprise(%)")),
         })
+    seen, uniq = set(), []
+    for x in sorted(out, key=lambda x: x["symbol"]):  # one row per company (MOG-A / MOG-B)
+        if x["name"] not in seen:
+            seen.add(x["name"])
+            uniq.append(x)
+    out = uniq
     order = {"BMO": 0, "TBD": 1, "AMC": 2}
     out.sort(key=lambda x: (x["date"], order[x["time"]], -(x["market_cap"] or 0)))
     return out
