@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "LFTO",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "Liftoff Mobile, Inc. - Common Stock",
+    "close": 24,
+    "atr50": 4.16
+   }
+  },
+  {
    "sym": "BRBR",
    "tags": [],
    "added": "2026-11-19",
