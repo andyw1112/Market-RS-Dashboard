@@ -266,3 +266,16 @@ footer { color: var(--muted); font-size: 12px; margin-top: 18px; max-width: 900p
   border-radius: 4px; padding: 1px 4px; line-height: 1.2;
 }
 .scan-count-new { font-size: 11px; font-weight: 700; opacity: .75; }
+.scan-marks { display: inline-flex; gap: 1px; flex: none; }
+.wl-mark {
+  width: 13px; height: 14px; border-radius: 4px; font-size: 8px; font-weight: 800; line-height: 12px;
+  text-align: center; border: 1px solid var(--c); color: var(--c); opacity: .35; cursor: pointer; user-select: none;
+}
+.wl-mark:hover { opacity: .8; }
+.wl-mark.on { background: var(--c); color: #111; opacity: 1; }
+body.wl-ro .wl-mark { cursor: default; }
+body.wl-ro .wl-mark:not(.on) { visibility: hidden; }
+/* room for the T / F / S marks */
+.scan-item { gap: 4px; padding: 5px; }
+.scan-sym { min-width: 40px; }
+.scan-dvol { min-width: 0; }

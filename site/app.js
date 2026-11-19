@@ -326,6 +326,8 @@
               <span class="scan-chg ${signClass(it.pct_1d)}">${fmtPct(it.pct_1d, 1)}</span>
               <span class="scan-badge" title="${sc.days ? `Gain from ${sc.days}D low` : "% off 52W high"}">${badge}</span>
               <span class="scan-dvol">${dvolFmt(it.dollar_vol)}</span>
+              <span class="scan-marks">${WL_LISTS.map((l) =>
+                `<span class="wl-mark" role="button" data-list="${l.key}" style="--c:${l.color}">${l.title[0]}</span>`).join("")}</span>
             </a>`;
           }).join("") || `<p class="placeholder">None today</p>`}
         </div>
@@ -502,6 +504,7 @@
 
   function applyMode() {
     $("#sec-lists").classList.toggle("readonly", !canEdit());
+    document.body.classList.toggle("wl-ro", !canEdit());
     $("#wl-connect").textContent = canEdit() ? "🔓 已連接" : "🔑 連接 GitHub";
     $("#wl-connect").title = canEdit() ? "撳嚟喺呢個 browser 移除 token" : "貼 GitHub token 先可以編輯";
     $("#wl-import").disabled = !canEdit();
@@ -555,7 +558,37 @@
     </tr>`;
   }
 
+  // Light up the T / F / S marks on scanner rows for stocks already in a list.
+  function syncScanMarks() {
+    const where = new Map();
+    WL_LISTS.forEach((l) => wl.state[l.key].forEach((e) => where.set(e.sym, l.key)));
+    $$("#scan-cols .scan-item").forEach((a) => {
+      const inList = where.get(a.dataset.sym);
+      $$(".wl-mark", a).forEach((m) => {
+        const l = WL_LISTS.find((x) => x.key === m.dataset.list);
+        const on = inList === l.key;
+        m.classList.toggle("on", on);
+        m.title = canEdit()
+          ? (on ? `喺 ${l.title} 度 · 撳嚟移除` : `加入 ${l.title}`)
+          : (on ? `喺 ${l.title} 度` : l.title);
+      });
+    });
+  }
+
+  function wlToggle(list, sym, snap) {
+    if (!canEdit()) return;
+    const arr = wl.state[list], i = arr.findIndex((e) => e.sym === sym);
+    if (i >= 0) {
+      arr.splice(i, 1);
+      wlSave();
+      renderLists();
+    } else {
+      wlAdd(list, sym, snap); // moves it out of any other list
+    }
+  }
+
   function renderLists() {
+    syncScanMarks();
     WL_LISTS.forEach((l) => {
       const box = $(`.wl[data-list="${l.key}"]`), items = wl.state[l.key];
       $(".wl-count", box).textContent = items.length;
@@ -620,6 +653,17 @@
         try { snap = JSON.parse(ev.dataTransfer.getData(DRAG_TYPE + "+snap") || "null"); } catch (_) { /* none */ }
         if (sym) wlAdd(l.key, sym, snap);
       });
+    });
+
+    $("#scan-cols").addEventListener("click", (ev) => {
+      const m = ev.target.closest(".wl-mark");
+      if (!m) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      const a = m.closest(".scan-item");
+      let snap = null;
+      try { snap = JSON.parse(a.dataset.snap || "null"); } catch (_) { /* none */ }
+      wlToggle(m.dataset.list, a.dataset.sym, snap);
     });
 
     // scanner items are the drag source
@@ -705,6 +749,7 @@
       .filter((r) => r.status === "ok" && r.group === "Sectors / Themes" && r.rs_1m >= SECTOR_MIN_RS1M)
       .map((r) => [r.ticker, r.rs_1m]));
     renderScanner(scan, strong);
+    syncScanMarks();
     wl.quotes = scan.quotes || {};
     renderLists();
   }).catch(scannerUnavailable);
