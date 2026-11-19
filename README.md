@@ -51,7 +51,7 @@ python -m http.server 8765        # 然後開 http://localhost:8765/site/
 `data/calendar.json` 由 `scripts/calendar_fetch.py` 產生，每次 update 都會刷新（逢星期日 UTC 22:30 會額外跑一次，香港時間星期一朝早就有新一週）。
 
 - **Economic data**：ForexFactory 每週 feed，只取 US + High impact（CPI、PPI、NFP、FOMC、Retail Sales 等）。呢個 feed 有 rate limit（大約 5 分鐘 2 次），本地唔好密密 run。
-- **Earnings**：yfinance（Yahoo earnings calendar），市值 ≥ US$100B。要改門檻就改 `EARNINGS_MIN_CAP`。
+- **Earnings**：yfinance（Yahoo earnings calendar），市值 ≥ US$10B（100億），唔包 OTC 外國股。要改門檻就改 `EARNINGS_MIN_CAP`。
 - 任何一個來源失敗都唔會令 run 失敗，會保留同一週上次成功攞到嘅數據。
 
 ## Stocks scanner
