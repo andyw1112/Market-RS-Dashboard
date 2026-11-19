@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "FIGS",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "FIGS, Inc. Class A Common Stock",
+    "close": 21.4,
+    "atr50": 2.26
+   }
+  },
+  {
    "sym": "APP",
    "tags": [],
    "added": "2026-11-19",
