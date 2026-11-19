@@ -74,6 +74,7 @@ h2 { font-size: 17px; margin: 0 0 10px; font-weight: 600; }
 .lamp.green { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
 .lamp.yellow { background: #facc15; box-shadow: 0 0 6px #facc1588; }
 .lamp.red { background: #ef4444; box-shadow: 0 0 6px #ef444488; }
+.lamp.orange { background: #f97316; box-shadow: 0 0 6px #f9731688; }
 .lamp.off { background: transparent; border: 1px solid var(--border); }
 td.atr-yellow { background: var(--warn-bg); color: var(--warn); font-weight: 600; }
 td.atr-red { background: var(--neg-bg); color: var(--neg); font-weight: 600; }

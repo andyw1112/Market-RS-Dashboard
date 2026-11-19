@@ -264,3 +264,25 @@ def test_stock_rs_vs_rsp():
     flat = pd.Series(10.0, index=idx); flat.iloc[-4] = 9.0
     assert stock_rs(flat, bench) == (16.7, 5.0)  # 1 of 6 / 1 of 20
     assert stock_rs(up, None) == (None, None)
+
+
+@pytest.mark.parametrize("price,e9,e21,e50,e200,expected", [
+    (95, 90, 90, 90, 100, "orange"),   # below 200, above 9/21/50 -> rebound below 200 EMA
+    (95, 96, 90, 90, 100, "yellow"),   # below 9 -> not orange
+    (95, 90, 90, 96, 100, "red"),      # below 50 and 200
+    (105, 90, 90, 90, 100, "green"),   # above everything
+])
+def test_orange_rebound_below_200(price, e9, e21, e50, e200, expected):
+    assert ema_light(price, e21, e50, e200, e9) == expected
+
+
+def test_condition_row_orange_daily_and_weekly():
+    idx = pd.bdate_range("2023-01-01", periods=600)
+    # long decline, then a sharp 20-day bounce that clears 9/21/50 but not 200
+    closes = [300 - i * 0.4 for i in range(575)] + [70 + i * 0.8 for i in range(1, 26)]
+    close = pd.Series(closes, index=idx, dtype=float)
+    df = pd.DataFrame({"Open": close, "High": close + 0.5, "Low": close - 0.5, "Close": close})
+    r = condition_row(df, df)
+    t = r["short"]
+    assert t["ema9"] < r["price"] < t["ema200"] and r["price"] > t["ema50"]
+    assert t["light"] == "orange" and r["long"]["light"] == "orange"

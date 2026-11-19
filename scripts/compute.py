@@ -147,12 +147,17 @@ def true_range(df: pd.DataFrame) -> pd.Series:
                      axis=1).max(axis=1)
 
 
-def ema_light(price: float, e21: float, e50: float, e200: float) -> str:
-    """green: above 21/50/200 | red: below 50 and 200 | yellow: everything else."""
+def ema_light(price: float, e21: float, e50: float, e200: float, e9: float | None = None) -> str:
+    """green : above 21/50/200
+    orange: "Rebound below 200 EMA" - below 200 but above 9/21/50
+    red   : below 50 and 200
+    yellow: everything else"""
     if price > e21 and price > e50 and price > e200:
         return "green"
     if price < e50 and price < e200:
         return "red"
+    if e9 is not None and price < e200 and price > e9 and price > e21 and price > e50:
+        return "orange"
     return "yellow"
 
 
@@ -160,9 +165,10 @@ def _trend(df: pd.DataFrame | None) -> dict | None:
     if df is None or len(df) < 200:
         return None
     c = df["Close"]
-    p, e21, e50, e200 = c.iloc[-1], ema(c, 21).iloc[-1], ema(c, 50).iloc[-1], ema(c, 200).iloc[-1]
-    return {"light": ema_light(p, e21, e50, e200),
-            "ema21": round(float(e21), 2), "ema50": round(float(e50), 2), "ema200": round(float(e200), 2)}
+    p, e9, e21, e50, e200 = (c.iloc[-1], ema(c, 9).iloc[-1], ema(c, 21).iloc[-1],
+                             ema(c, 50).iloc[-1], ema(c, 200).iloc[-1])
+    return {"light": ema_light(p, e21, e50, e200, e9),
+            "ema9": round(float(e9), 2), "ema21": round(float(e21), 2), "ema50": round(float(e50), 2), "ema200": round(float(e200), 2)}
 
 
 def condition_row(daily: pd.DataFrame | None, weekly: pd.DataFrame | None, is_vix: bool = False) -> dict:

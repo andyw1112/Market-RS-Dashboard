@@ -151,7 +151,8 @@
 
   function emaTip(t, tf) {
     if (!t) return `${tf}: not enough history`;
-    return `${tf} EMA21 ${fmtNum(t.ema21)} · EMA50 ${fmtNum(t.ema50)} · EMA200 ${fmtNum(t.ema200)}`;
+    const lbl = { green: "Good", orange: "Rebound below 200 EMA", yellow: "Mixed", red: "Poor" }[t.light] || "";
+    return `${tf}: ${lbl}\n${t.ema9 != null ? `EMA9 ${fmtNum(t.ema9)} · ` : ""}EMA21 ${fmtNum(t.ema21)} · EMA50 ${fmtNum(t.ema50)} · EMA200 ${fmtNum(t.ema200)}`;
   }
 
   function renderCondition(items) {
@@ -185,6 +186,7 @@
         <ul>
           <li><span class="lamp red"></span> Red color = Poor market condition</li>
           <li><span class="lamp green"></span> Green color = Good market condition</li>
+          <li><span class="lamp orange"></span> Orange color = Rebound below 200 EMA (below 200 EMA, above 9/21/50 EMA)</li>
           <li><span class="rm-tag atr-yellow">&gt; 4</span> ATR% over 4 = Extended</li>
           <li><span class="rm-tag atr-red">&gt; 8</span> ATR% over 8 = Extremely extended</li>
           <li><b>VIX</b> below 15 = High risk to pullback</li>
@@ -192,7 +194,7 @@
             If it cannot quickly reclaim weekly important levels (e.g. weekly 21/50 EMA), market condition is extremely poor.</li>
         </ul>
       </div>
-      <p class="cond-legend">Short = daily、Long = weekly 21/50/200 EMA：🟢 企穩三條 · 🟡 中間 · 🔴 低過 50 同 200。
+      <p class="cond-legend">Short = daily、Long = weekly 21/50/200 EMA：🟢 企穩 21/50/200 · 🟠 低過 200 但企穩 9/21/50 · 🟡 中間 · 🔴 低過 50 同 200。
       ATR× = (收市 − daily 50 EMA) ÷ ATR(28)。VIX &gt; 30 綠。</p>`;
   }
 
