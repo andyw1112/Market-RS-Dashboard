@@ -246,13 +246,36 @@
       </div>`).join("");
   }
 
+  // Earnings dates / BMO / AMC are US-session terms, so "past" is judged in New York time.
+  function nyNow() {
+    const p = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hour12: false,
+    }).formatToParts(new Date()).map((x) => [x.type, x.value]));
+    return { date: `${p.year}-${p.month}-${p.day}`, mins: (+p.hour % 24) * 60 + +p.minute };
+  }
+
+  // An earnings release is over once it's reported, or once its US session has passed:
+  // earlier days; today's BMO after the 09:30 open; today's TBD / AMC after 20:00 ET.
+  function earningsDone(e, ny) {
+    if (e.eps_reported != null || e.date < ny.date) return true;
+    if (e.date > ny.date) return false;
+    return e.time === "BMO" ? ny.mins >= 9 * 60 + 30 : ny.mins >= 20 * 60;
+  }
+
+  let calData = null;
   function renderCalendar(c) {
+    calData = c || calData;
+    c = calData;
     $("#cal-week").textContent = `${dayLabel(c.week_start)} – ${dayLabel(c.week_end)}`;
     $("#cal-cap").textContent = `market cap ≥ ${capFmt(c.earnings_min_cap)}`;
-    const today = dayKey(new Date());
-    const econ = (c.economic || []).map((e) => ({ ...e, t: new Date(e.datetime) }));
-    $("#cal-econ").innerHTML = econHtml(econ, today, Date.now());
-    $("#cal-earn").innerHTML = earnHtml(c.earnings || [], today);
+    const now = Date.now(), ny = nyNow(), today = dayKey(new Date());
+    const allEcon = (c.economic || []).map((e) => ({ ...e, t: new Date(e.datetime) }));
+    const econ = allEcon.filter((e) => e.t.getTime() >= now);           // hide released data
+    const earn = (c.earnings || []).filter((e) => !earningsDone(e, ny)); // hide reported earnings
+    const done = (n, total) => (n < total && !n ? `<p class="placeholder">今個星期嘅已經全部過咗</p>` : "");
+    $("#cal-econ").innerHTML = done(econ.length, allEcon.length) || econHtml(econ, today, now);
+    $("#cal-earn").innerHTML = done(earn.length, (c.earnings || []).length) || earnHtml(earn, today);
   }
 
   function calendarUnavailable() {
@@ -672,6 +695,7 @@
   });
 
   load("calendar.json").then(renderCalendar).catch(calendarUnavailable);
+  setInterval(() => calData && renderCalendar(), 60 * 1000); // drop items as they pass while the page is open
   initLists();
   Promise.all([load("scanner.json"), load().catch(() => null)]).then(([scan, latest]) => {
     const strong = new Map((latest ? latest.rows : [])
