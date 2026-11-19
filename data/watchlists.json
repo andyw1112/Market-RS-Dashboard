@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "ARHS",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "Arhaus, Inc. - Class A Common Stock",
+    "close": 13.81,
+    "atr50": 3.38
+   }
+  },
+  {
    "sym": "NUAI",
    "tags": [],
    "added": "2026-11-19",
