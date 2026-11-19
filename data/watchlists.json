@@ -79,6 +79,16 @@
  ],
  "stalk": [
   {
+   "sym": "PVH",
+   "tags": [],
+   "added": "2026-11-19",
+   "snap": {
+    "name": "PVH Corp. Common Stock",
+    "close": 97.85,
+    "atr50": 3.73
+   }
+  },
+  {
    "sym": "RYTM",
    "tags": [],
    "added": "2026-11-19",
