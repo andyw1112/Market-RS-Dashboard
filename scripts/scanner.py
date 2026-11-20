@@ -12,6 +12,7 @@ Scanners (all also require: close > $2, 20-day avg dollar volume > $10M, market 
 from __future__ import annotations
 
 import csv
+import json
 import logging
 import re
 import time
@@ -34,6 +35,7 @@ SYMDIR = "https://www.nasdaqtrader.com/dynamic/SymDir/{}.txt"
 UA = "rs-dashboard/1.0"
 
 SECTOR_MAP = Path(__file__).resolve().parent.parent / "config" / "sector_map.csv"
+META_CACHE = Path(__file__).resolve().parent.parent / "data" / "meta_cache.json"
 
 MIN_PRICE = 2.0
 MIN_DOLLAR_VOL = 10e6
@@ -152,6 +154,44 @@ def fetch_meta(symbols: list[str]) -> dict[str, dict | None]:
     return meta
 
 
+# ------------------------------------------------------------------ meta cache
+# Last good market cap / sector / industry per stock, used when Yahoo's .info fails
+# ("Invalid Crumb", rate limits). Market cap is rescaled by the price change since it was cached.
+def load_meta_cache(path: Path = META_CACHE) -> dict[str, dict]:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def save_meta_cache(cache: dict[str, dict], path: Path = META_CACHE) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(dict(sorted(cache.items())), ensure_ascii=False, separators=(",", ":")) + "\n",
+                    encoding="utf-8")
+
+
+def merge_meta(meta: dict[str, dict | None], cache: dict[str, dict], closes: dict[str, float],
+               as_of: str) -> int:
+    """Store fresh lookups in `cache`; fill failed ones (None) from it. Returns how many were filled."""
+    filled = 0
+    for sym, m in meta.items():
+        close = closes.get(sym)
+        if m is not None:
+            if m.get("market_cap") is not None or m.get("sector"):
+                cache[sym] = {**m, "close": close, "date": as_of}
+            continue
+        c = cache.get(sym)
+        if not c:
+            continue
+        cap = c.get("market_cap")
+        if cap is not None and close and c.get("close"):
+            cap = cap * close / c["close"]
+        meta[sym] = {"market_cap": cap, "sector": c.get("sector"), "industry": c.get("industry"),
+                     "cached": c.get("date")}
+        filled += 1
+    return filled
+
+
 def cap_ok(meta: dict | None) -> bool:
     """Market cap >= $500M. If the Yahoo lookup itself failed, keep the stock rather than drop it silently."""
     if meta is None:
@@ -249,7 +289,7 @@ def seen_recently(df: pd.DataFrame, days: int = NEW_LOOKBACK_DAYS) -> bool:
 
 
 def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
-              bench: pd.Series | None = None) -> dict:
+              bench: pd.Series | None = None, cache: dict[str, dict] | None = None) -> dict:
     metrics = {}
     for sym, df in data.items():
         if df.index[-1].date().isoformat() != as_of:  # stale / halted
@@ -263,6 +303,10 @@ def run_scans(names: dict[str, str], data: dict[str, pd.DataFrame], as_of: str,
             metrics[sym] = m
     candidates = sorted({sym for sym, m in metrics.items() if any(passes(s, m) for s in SCANS)})
     meta = fetch_meta(candidates)
+    if cache is not None:
+        n = merge_meta(meta, cache, {s: metrics[s]["close"] for s in candidates}, as_of)
+        if n:
+            log.info("scanner: market cap / sector for %d stocks taken from the cache", n)
     rules = load_sector_map()
     new = {sym for sym in candidates if not seen_recently(data[sym])}
     log.info("scanner: %d new (not in any scan over the previous %d days)", len(new), NEW_LOOKBACK_DAYS)
@@ -309,4 +353,7 @@ def scan(as_of: str) -> dict:
     if bench_df is None:
         log.warning("scanner: no %s data, RS columns will be empty", BENCH)
     names.pop(BENCH, None)
-    return run_scans(names, data, as_of, None if bench_df is None else bench_df["Close"])
+    cache = load_meta_cache()
+    res = run_scans(names, data, as_of, None if bench_df is None else bench_df["Close"], cache)
+    save_meta_cache(cache)
+    return res

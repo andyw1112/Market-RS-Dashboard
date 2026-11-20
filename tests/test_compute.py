@@ -351,3 +351,17 @@ def test_info_empty_answer_is_a_failed_lookup(monkeypatch):
     monkeypatch.setattr(scanner.time, "sleep", lambda s: None)
     sym, meta = scanner._info("ABC")
     assert meta is None and scanner.cap_ok(meta)       # kept, not dropped as "no market cap"
+
+
+def test_meta_cache_fills_failed_lookups_and_rescales_cap():
+    from scanner import merge_meta, cap_ok
+    cache = {"OLD": {"market_cap": 1e9, "sector": "Technology", "industry": "Semiconductors",
+                     "close": 50.0, "date": "2026-11-18"}}
+    meta = {"OLD": None, "NEW": {"market_cap": 2e9, "sector": "Energy", "industry": "Oil & Gas E&P"},
+            "GONE": None}
+    n = merge_meta(meta, cache, {"OLD": 25.0, "NEW": 10.0, "GONE": 5.0}, "2026-11-19")
+    assert n == 1
+    assert meta["OLD"]["market_cap"] == pytest.approx(5e8) and meta["OLD"]["sector"] == "Technology"
+    assert meta["OLD"]["cached"] == "2026-11-18"
+    assert cache["NEW"]["close"] == 10.0 and cache["NEW"]["date"] == "2026-11-19"   # fresh lookup stored
+    assert meta["GONE"] is None and cap_ok(meta["GONE"])                            # unknown -> kept
