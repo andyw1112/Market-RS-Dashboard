@@ -40,6 +40,16 @@
  "focus": [],
  "stalk": [
   {
+   "sym": "INSM",
+   "tags": [],
+   "added": "2026-11-20",
+   "snap": {
+    "name": "Insmed Incorporated - Common Stock",
+    "close": 144.25,
+    "atr50": 5.78
+   }
+  },
+  {
    "sym": "HELE",
    "tags": [
     "flag"
