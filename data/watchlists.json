@@ -1,6 +1,17 @@
 {
- "today": [],
- "focus": [
+ "today": [
+  {
+   "sym": "GMAB",
+   "tags": [
+    "flag"
+   ],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Genmab A/S - American Depositary Shares",
+    "close": 51.96,
+    "atr50": 3.41
+   }
+  },
   {
    "sym": "AXGN",
    "tags": [
@@ -12,7 +23,9 @@
     "close": 56.95,
     "atr50": 4.04
    }
-  },
+  }
+ ],
+ "focus": [
   {
    "sym": "CDNA",
    "tags": [
@@ -23,18 +36,6 @@
     "name": "CareDx, Inc. - Common Stock",
     "close": 74.56,
     "atr50": 1.23
-   }
-  },
-  {
-   "sym": "GMAB",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Genmab A/S - American Depositary Shares",
-    "close": 51.96,
-    "atr50": 3.41
    }
   }
  ],
