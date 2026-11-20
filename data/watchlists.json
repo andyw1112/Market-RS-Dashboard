@@ -1,6 +1,18 @@
 {
  "today": [
   {
+   "sym": "CDNA",
+   "tags": [
+    "fw"
+   ],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "CareDx, Inc. - Common Stock",
+    "close": 74.56,
+    "atr50": 1.23
+   }
+  },
+  {
    "sym": "GMAB",
    "tags": [
     "flag"
@@ -25,20 +37,7 @@
    }
   }
  ],
- "focus": [
-  {
-   "sym": "CDNA",
-   "tags": [
-    "fw"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "CareDx, Inc. - Common Stock",
-    "close": 74.56,
-    "atr50": 1.23
-   }
-  }
- ],
+ "focus": [],
  "stalk": [
   {
    "sym": "HELE",
