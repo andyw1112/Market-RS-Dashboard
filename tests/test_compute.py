@@ -301,3 +301,43 @@ def test_scanner_new_flag(monkeypatch):
     flags = {i["symbol"]: i["new"] for i in high52["items"]}
     assert flags == {"OLD": False, "FRESH": True, "BACK": True}
     assert high52["new"] == 2
+
+
+# ---------------------------------------------------------------- Yahoo empty-Close repair
+def _daily_with_empty_close():
+    idx = pd.bdate_range("2026-11-16", periods=4)  # Mon..Thu, Thu Close missing
+    return pd.DataFrame({"Open": [10, 11, 12, 12.5], "High": [11, 12, 13, 13.0],
+                         "Low": [9, 10, 11, 11.0], "Close": [10.5, 11.5, 12.5, float("nan")]}, index=idx)
+
+
+def test_split_keeps_last_bar_without_close():
+    from fetch import _split, needs_close
+    raw = _daily_with_empty_close()
+    df = _split(raw, ["X"])["X"]
+    assert len(df) == 4 and needs_close(df)
+
+
+def test_apply_intraday_close_uses_last_hour_of_that_day():
+    from fetch import apply_intraday_close
+    hrs = pd.DatetimeIndex(["2026-11-19 14:30", "2026-11-19 19:30", "2026-11-19 20:30"], tz="UTC")
+    intra = pd.DataFrame({"Close": [12.0, 12.2, 11.69]}, index=hrs)
+    out = apply_intraday_close(_daily_with_empty_close(), intra)
+    assert out["Close"].iloc[-1] == pytest.approx(11.69)
+
+
+def test_apply_intraday_close_clamps_and_drops():
+    from fetch import apply_intraday_close
+    hrs = pd.DatetimeIndex(["2026-11-19 20:30"], tz="UTC")
+    out = apply_intraday_close(_daily_with_empty_close(), pd.DataFrame({"Close": [99.0]}, index=hrs))
+    assert out["Close"].iloc[-1] == 13.0                       # clamped to the bar's High
+    other_day = pd.DataFrame({"Close": [12.0]}, index=pd.DatetimeIndex(["2026-11-18 20:30"], tz="UTC"))
+    assert len(apply_intraday_close(_daily_with_empty_close(), other_day)) == 3   # can't fill -> drop bar
+    assert len(apply_intraday_close(_daily_with_empty_close(), None)) == 3
+
+
+def test_split_ignores_empty_rows_from_other_tickers():
+    from fetch import _split, needs_close
+    raw = _daily_with_empty_close()
+    raw.loc[pd.Timestamp("2026-11-20")] = [float("nan")] * 4   # e.g. a crypto-only date
+    df = _split(raw, ["X"])["X"]
+    assert df.index[-1] == pd.Timestamp("2026-11-19") and needs_close(df)

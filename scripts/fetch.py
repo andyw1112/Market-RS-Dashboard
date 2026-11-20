@@ -15,6 +15,7 @@ ET = ZoneInfo("America/New_York")
 # ~400 calendar days comfortably covers 260+ trading days.
 PERIOD = "400d"
 FIELDS = ["Open", "High", "Low", "Close"]
+INTRADAY_CHUNK = 250
 
 
 def _download(tickers: list[str]) -> pd.DataFrame:
@@ -30,7 +31,9 @@ def _download(tickers: list[str]) -> pd.DataFrame:
     )
 
 
-def _split(raw: pd.DataFrame, tickers: list[str]) -> dict[str, pd.DataFrame]:
+def _split(raw: pd.DataFrame, tickers: list[str], fields: list[str] = FIELDS) -> dict[str, pd.DataFrame]:
+    """Per-ticker frames. A last bar with High/Low but no Close (Yahoo sometimes leaves the
+    newest daily Close empty for hours) is kept and repaired by `patch_missing_closes`."""
     out: dict[str, pd.DataFrame] = {}
     if raw is None or raw.empty:
         return out
@@ -40,13 +43,72 @@ def _split(raw: pd.DataFrame, tickers: list[str]) -> dict[str, pd.DataFrame]:
             df = raw[t] if multi else raw
         except KeyError:
             continue
-        df = df[[c for c in FIELDS if c in df.columns]].dropna(subset=["Close"])
-        if df.empty:
-            continue
+        df = df[[c for c in fields if c in df.columns]]
         df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
         df = df[~df.index.duplicated(keep="last")].sort_index()
-        out[t] = df
+        # empty rows come from other tickers' dates (e.g. crypto trades on days stocks don't)
+        df = df.dropna(how="all", subset=[c for c in ("Open", "High", "Low", "Close") if c in df.columns])
+        partial = df["Close"].isna() & df["High"].notna()
+        keep = df["Close"].notna() | (partial & (df.index == df.index[-1]) if len(df) else partial)
+        df = df[keep]
+        if df["Close"].notna().any():
+            out[t] = df
     return out
+
+
+def needs_close(df: pd.DataFrame) -> bool:
+    return len(df) > 0 and pd.isna(df["Close"].iloc[-1]) and pd.notna(df["High"].iloc[-1])
+
+
+def apply_intraday_close(daily: pd.DataFrame, intraday: pd.DataFrame | None) -> pd.DataFrame:
+    """Fill a missing Close on the last daily bar with that day's last intraday close
+    (New York date), kept inside the bar's Low..High. Drops the bar if it can't be filled."""
+    if not needs_close(daily):
+        return daily
+    day = daily.index[-1].date()
+    close = None
+    if intraday is not None and not intraday.empty:
+        idx = pd.to_datetime(intraday.index)
+        idx = idx.tz_convert(ET) if idx.tz is not None else idx
+        c = intraday["Close"][[d.date() == day for d in idx]].dropna()
+        if len(c):
+            close = float(c.iloc[-1])
+    out = daily.copy()
+    if close is None:
+        return out.iloc[:-1]
+    lo, hi = out["Low"].iloc[-1], out["High"].iloc[-1]
+    if pd.notna(lo) and pd.notna(hi):
+        close = min(max(close, float(lo)), float(hi))
+    out.iloc[-1, out.columns.get_loc("Close")] = close
+    return out
+
+
+def patch_missing_closes(frames: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
+    """Repair empty last-bar Closes from 60-minute bars (batched); drop the bar if impossible."""
+    todo = [t for t, df in frames.items() if needs_close(df)]
+    if todo:
+        log.warning("%d tickers have no Close on their last daily bar - filling from 60m bars", len(todo))
+    for i in range(0, len(todo), INTRADAY_CHUNK):
+        chunk = todo[i:i + INTRADAY_CHUNK]
+        try:
+            raw = yf.download(chunk, period="5d", interval="60m", auto_adjust=False, actions=False,
+                              group_by="ticker", threads=True, progress=False)
+        except Exception as e:  # noqa: BLE001
+            log.warning("intraday close fill failed: %s", e)
+            raw = None
+        multi = raw is not None and isinstance(raw.columns, pd.MultiIndex)
+        for t in chunk:
+            intra = None
+            if raw is not None and not raw.empty:
+                try:
+                    intra = raw[t] if multi else raw
+                except KeyError:
+                    intra = None
+            frames[t] = apply_intraday_close(frames[t], intra)
+    fixed = sum(1 for t in todo if len(frames[t]) and pd.notna(frames[t]["Close"].iloc[-1]))
+    if todo:
+        log.info("filled %d of %d missing closes", fixed, len(todo))
+    return {t: df for t, df in frames.items() if len(df)}
 
 
 def drop_unfinished_session(df: pd.DataFrame, now: datetime | None = None) -> pd.DataFrame:
@@ -66,7 +128,7 @@ def fetch_ohlc(tickers: list[str], retries: int = 2) -> dict[str, pd.DataFrame]:
     Tickers that fail are simply absent from the result (caller marks them "No data").
     Missing tickers get one more individual retry pass.
     """
-    data = _split(_download(tickers), tickers)
+    data = patch_missing_closes(_split(_download(tickers), tickers))
     missing = [t for t in tickers if t not in data]
     for attempt in range(retries):
         if not missing:
@@ -75,7 +137,7 @@ def fetch_ohlc(tickers: list[str], retries: int = 2) -> dict[str, pd.DataFrame]:
         time.sleep(2)
         for t in list(missing):
             try:
-                got = _split(_download([t]), [t])
+                got = patch_missing_closes(_split(_download([t]), [t]))
             except Exception as e:  # noqa: BLE001 - never let one ticker kill the run
                 log.warning("%s: %s", t, e)
                 continue
@@ -99,6 +161,16 @@ def fetch_condition(symbols: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
         except Exception as e:  # noqa: BLE001
             log.warning("index condition %s failed: %s", key, e)
             continue
-        for s, df in _split(raw, symbols).items():
+        frames = _split(raw, symbols)
+        if key == "daily":
+            frames = patch_missing_closes(frames)
+        for s, df in frames.items():
+            if key == "weekly" and needs_close(df):
+                d = out[s].get("daily")  # this week's bar: use the latest daily close
+                if d is not None and len(d) and d.index[-1] >= df.index[-1]:
+                    df = df.copy()
+                    df.iloc[-1, df.columns.get_loc("Close")] = float(d["Close"].iloc[-1])
+                else:
+                    df = df.iloc[:-1]
             out[s][key] = df
     return out

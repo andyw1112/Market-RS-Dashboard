@@ -24,6 +24,7 @@ import pandas as pd
 import yfinance as yf
 
 from compute import MONTH_LOOKBACK, THRUST_LOOKBACK, atr, rs_rank_pct
+from fetch import _split, patch_missing_closes
 
 BENCH = "RSP"
 
@@ -116,14 +117,9 @@ def download(symbols: list[str]) -> dict[str, pd.DataFrame]:
                 time.sleep(10 * (attempt + 1))
         else:
             continue
-        for s in chunk:
-            try:
-                df = raw[s] if isinstance(raw.columns, pd.MultiIndex) else raw
-            except KeyError:
-                continue
-            df = df[["Open", "High", "Low", "Close", "Volume"]].dropna(subset=["Close"])
+        frames = patch_missing_closes(_split(raw, chunk, ["Open", "High", "Low", "Close", "Volume"]))
+        for s, df in frames.items():
             if len(df) >= 30:
-                df.index = pd.to_datetime(df.index).tz_localize(None).normalize()
                 data[s] = df
         log.info("scanner download %d/%d (%d with data)", min(i + CHUNK, len(symbols)), len(symbols), len(data))
         time.sleep(1)
