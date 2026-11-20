@@ -128,19 +128,28 @@ def download(symbols: list[str]) -> dict[str, pd.DataFrame]:
 
 # ------------------------------------------------------------------ market cap / sector
 def _info(sym: str) -> tuple[str, dict | None]:
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             i = yf.Ticker(sym).info or {}
-            return sym, {"market_cap": i.get("marketCap"), "sector": i.get("sector"), "industry": i.get("industry")}
         except Exception as e:  # noqa: BLE001
             log.debug("%s info attempt %d: %s", sym, attempt + 1, e)
-            time.sleep(2)
+            i = {}
+        # Yahoo answers "Invalid Crumb" / rate limits with an empty or bare dict: that is a
+        # failed lookup, not "no market cap", so retry and finally report None (= keep stock).
+        if i.get("marketCap") is not None or i.get("sector") or i.get("quoteType"):
+            return sym, {"market_cap": i.get("marketCap"), "sector": i.get("sector"), "industry": i.get("industry")}
+        time.sleep(2 * (attempt + 1))
     return sym, None  # lookup failed (not the same as "no market cap")
 
 
 def fetch_meta(symbols: list[str]) -> dict[str, dict | None]:
-    with ThreadPoolExecutor(8) as ex:
-        return dict(ex.map(_info, symbols))
+    with ThreadPoolExecutor(4) as ex:
+        meta = dict(ex.map(_info, symbols))
+    failed = sum(1 for v in meta.values() if v is None)
+    if failed:
+        log.warning("market cap lookup failed for %d of %d stocks - kept without the $%dM check",
+                    failed, len(meta), MIN_MARKET_CAP / 1e6)
+    return meta
 
 
 def cap_ok(meta: dict | None) -> bool:

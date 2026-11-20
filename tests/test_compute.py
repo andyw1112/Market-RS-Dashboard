@@ -341,3 +341,13 @@ def test_split_ignores_empty_rows_from_other_tickers():
     raw.loc[pd.Timestamp("2026-11-20")] = [float("nan")] * 4   # e.g. a crypto-only date
     df = _split(raw, ["X"])["X"]
     assert df.index[-1] == pd.Timestamp("2026-11-19") and needs_close(df)
+
+
+def test_info_empty_answer_is_a_failed_lookup(monkeypatch):
+    import scanner
+    class T:
+        def __init__(self, sym): self.info = {"trailingPegRatio": None}   # what Yahoo returns on "Invalid Crumb"
+    monkeypatch.setattr(scanner.yf, "Ticker", T)
+    monkeypatch.setattr(scanner.time, "sleep", lambda s: None)
+    sym, meta = scanner._info("ABC")
+    assert meta is None and scanner.cap_ok(meta)       # kept, not dropped as "no market cap"
