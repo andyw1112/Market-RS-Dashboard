@@ -37,7 +37,7 @@ python -m http.server 8765        # 然後開 http://localhost:8765/site/
 3. Repo → **Settings → Actions → General → Workflow permissions** 揀 **Read and write permissions**（workflow 要 commit `data/`）。
 4. **Actions → Update RS dashboard → Run workflow** 手動跑一次，完成後網址會喺 run summary 顯示。
 
-之後每個平日 UTC 22:30（香港時間 06:30）自動跑。美股假期時最新交易日冇變，唔會 commit。失敗 GitHub 會 email 通知。
+之後每個平日 UTC 22:47（香港時間 06:47）自動跑，UTC 01:17（香港時間 09:17）再跑一次做後備（GitHub 排程經常遲）。美股假期時最新交易日冇變，唔會 commit。失敗 GitHub 會 email 通知。
 
 ## 備註
 
@@ -48,7 +48,7 @@ python -m http.server 8765        # 然後開 http://localhost:8765/site/
 
 ## Financial calendar
 
-`data/calendar.json` 由 `scripts/calendar_fetch.py` 產生，每次 update 都會刷新（逢星期日 UTC 22:30 會額外跑一次，香港時間星期一朝早就有新一週）。
+`data/calendar.json` 由 `scripts/calendar_fetch.py` 產生，每次 update 都會刷新（逢星期日 UTC 22:47 會額外跑一次，香港時間星期一朝早就有新一週）。
 
 - **Economic data**：ForexFactory 每週 feed，只取 US + High impact（CPI、PPI、NFP、FOMC、Retail Sales 等）。呢個 feed 有 rate limit（大約 5 分鐘 2 次），本地唔好密密 run。
 - **Earnings**：yfinance（Yahoo earnings calendar），市值 ≥ US$10B（100億），唔包 OTC 外國股。要改門檻就改 `EARNINGS_MIN_CAP`。
