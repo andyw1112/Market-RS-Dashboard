@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-16",
  "week_end": "2026-11-20",
- "generated_at": "2026-11-21T02:16:50+00:00",
+ "generated_at": "2026-11-21T02:29:27+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -189,7 +189,7 @@
    "symbol": "TJX",
    "name": "The TJX Companies, Inc.",
    "time": "BMO",
-   "market_cap": 153578373025.85,
+   "market_cap": 154238829356.46,
    "eps_estimate": 1.34,
    "eps_reported": 1.34,
    "surprise_pct": -0.07
@@ -259,7 +259,7 @@
    "symbol": "WMT",
    "name": "Walmart Inc.",
    "time": "BMO",
-   "market_cap": 1018236203596.12,
+   "market_cap": 1015122807324.08,
    "eps_estimate": 0.64,
    "eps_reported": 0.65,
    "surprise_pct": 2.16
@@ -299,7 +299,7 @@
    "symbol": "WSM",
    "name": "Williams-Sonoma, Inc.",
    "time": "BMO",
-   "market_cap": 24816071391.67,
+   "market_cap": 24813717240.6,
    "eps_estimate": 2.21,
    "eps_reported": 2.38,
    "surprise_pct": 7.59
@@ -339,7 +339,7 @@
    "symbol": "ROST",
    "name": "Ross Stores, Inc.",
    "time": "AMC",
-   "market_cap": 68473930636.64,
+   "market_cap": 68190463005.37,
    "eps_estimate": 1.87,
    "eps_reported": 1.91,
    "surprise_pct": 2.21
