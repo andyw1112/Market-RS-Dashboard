@@ -40,6 +40,16 @@
  "focus": [],
  "stalk": [
   {
+   "sym": "COST",
+   "tags": [],
+   "added": "2026-11-23",
+   "snap": {
+    "name": "Costco Wholesale Corporation - Common Stock",
+    "close": 1104.02,
+    "atr50": 4.54
+   }
+  },
+  {
    "sym": "COTY",
    "tags": [],
    "added": "2026-11-23",
