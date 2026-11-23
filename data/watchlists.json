@@ -1,6 +1,18 @@
 {
  "today": [
   {
+   "sym": "GKOS",
+   "tags": [
+    "flag"
+   ],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Glaukos Corporation Common Stock",
+    "close": 243.25,
+    "atr50": 3.94
+   }
+  },
+  {
    "sym": "CDNA",
    "tags": [
     "fw"
@@ -171,18 +183,6 @@
     "name": "Enovis Corporation Common Stock",
     "close": 27.22,
     "atr50": 3.04
-   }
-  },
-  {
-   "sym": "GKOS",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Glaukos Corporation Common Stock",
-    "close": 243.25,
-    "atr50": 3.94
    }
   },
   {
