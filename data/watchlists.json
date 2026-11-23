@@ -37,7 +37,8 @@
    }
   }
  ],
- "focus": [
+ "focus": [],
+ "stalk": [
   {
    "sym": "INSM",
    "tags": [],
@@ -47,9 +48,7 @@
     "close": 144.25,
     "atr50": 5.78
    }
-  }
- ],
- "stalk": [
+  },
   {
    "sym": "HELE",
    "tags": [
