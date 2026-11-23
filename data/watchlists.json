@@ -52,6 +52,18 @@
  "focus": [],
  "stalk": [
   {
+   "sym": "LQDA",
+   "tags": [
+    "flag"
+   ],
+   "added": "2026-11-18",
+   "snap": {
+    "name": "Liquidia Corporation - Common Stock",
+    "close": 56.73,
+    "atr50": 1.75
+   }
+  },
+  {
    "sym": "COST",
    "tags": [],
    "added": "2026-11-23",
@@ -275,18 +287,6 @@
     "name": "Viridian Therapeutics, Inc.  - Common Stock",
     "close": 30.06,
     "atr50": 4.34
-   }
-  },
-  {
-   "sym": "LQDA",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Liquidia Corporation - Common Stock",
-    "close": 56.73,
-    "atr50": 1.75
    }
   }
  ]
