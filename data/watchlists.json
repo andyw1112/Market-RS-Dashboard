@@ -40,6 +40,16 @@
  "focus": [],
  "stalk": [
   {
+   "sym": "COTY",
+   "tags": [],
+   "added": "2026-11-23",
+   "snap": {
+    "name": "Coty Inc. Class A Common Stock",
+    "close": 3.95,
+    "atr50": 2.79
+   }
+  },
+  {
    "sym": "INSM",
    "tags": [],
    "added": "2026-11-20",
