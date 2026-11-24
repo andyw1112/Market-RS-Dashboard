@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-23",
  "week_end": "2026-11-27",
- "generated_at": "2026-11-24T01:39:37+00:00",
+ "generated_at": "2026-11-24T06:29:33+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -55,7 +55,7 @@
    "symbol": "A",
    "name": "Agilent Technologies, Inc.",
    "time": "AMC",
-   "market_cap": 49637259827.44,
+   "market_cap": 49630753565.33,
    "eps_estimate": 1.73,
    "eps_reported": 1.86,
    "surprise_pct": 7.71
@@ -75,7 +75,7 @@
    "symbol": "J",
    "name": "Jacobs Solutions Inc.",
    "time": "AMC",
-   "market_cap": 18437092247.96,
+   "market_cap": 18601280724.73,
    "eps_estimate": 2.12,
    "eps_reported": 2.2,
    "surprise_pct": 3.57
