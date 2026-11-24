@@ -1,6 +1,11 @@
 {
  "today": [
   {
+   "sym": "ITB",
+   "tags": [],
+   "added": "2026-11-24"
+  },
+  {
    "sym": "CDNA",
    "tags": [
     "fw"
