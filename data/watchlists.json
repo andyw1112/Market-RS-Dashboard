@@ -1,18 +1,6 @@
 {
  "today": [
   {
-   "sym": "GKOS",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Glaukos Corporation Common Stock",
-    "close": 243.25,
-    "atr50": 3.94
-   }
-  },
-  {
    "sym": "CDNA",
    "tags": [
     "fw"
@@ -22,18 +10,6 @@
     "name": "CareDx, Inc. - Common Stock",
     "close": 74.56,
     "atr50": 1.23
-   }
-  },
-  {
-   "sym": "GMAB",
-   "tags": [
-    "flag"
-   ],
-   "added": "2026-11-18",
-   "snap": {
-    "name": "Genmab A/S - American Depositary Shares",
-    "close": 51.96,
-    "atr50": 3.41
    }
   }
  ],
