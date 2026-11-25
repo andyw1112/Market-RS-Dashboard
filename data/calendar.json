@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-23",
  "week_end": "2026-11-27",
- "generated_at": "2026-11-25T05:03:58+00:00",
+ "generated_at": "2026-11-25T09:52:03+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -55,7 +55,7 @@
    "symbol": "A",
    "name": "Agilent Technologies, Inc.",
    "time": "AMC",
-   "market_cap": 51746367206.45,
+   "market_cap": 51739584490.61,
    "eps_estimate": 1.73,
    "eps_reported": 1.86,
    "surprise_pct": 7.71
@@ -75,7 +75,7 @@
    "symbol": "J",
    "name": "Jacobs Solutions Inc.",
    "time": "AMC",
-   "market_cap": 17787527599.74,
+   "market_cap": 17945931485.92,
    "eps_estimate": 2.12,
    "eps_reported": 2.2,
    "surprise_pct": 3.57
@@ -155,7 +155,7 @@
    "symbol": "DELL",
    "name": "Dell Technologies Inc.",
    "time": "AMC",
-   "market_cap": 187742788043.86,
+   "market_cap": 187253219211.61,
    "eps_estimate": 6.59,
    "eps_reported": 9.45,
    "surprise_pct": 43.46
