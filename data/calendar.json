@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-23",
  "week_end": "2026-11-27",
- "generated_at": "2026-11-25T01:14:12+00:00",
+ "generated_at": "2026-11-25T05:03:58+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -162,6 +162,16 @@
   },
   {
    "date": "2026-11-24",
+   "symbol": "ADSK",
+   "name": "Autodesk, Inc.",
+   "time": "AMC",
+   "market_cap": 53441299362.18,
+   "eps_estimate": 3.07,
+   "eps_reported": 3.2,
+   "surprise_pct": 4.29
+  },
+  {
+   "date": "2026-11-24",
    "symbol": "WDAY",
    "name": "Workday, Inc.",
    "time": "AMC",
@@ -169,6 +179,26 @@
    "eps_estimate": 2.74,
    "eps_reported": 2.82,
    "surprise_pct": 2.76
+  },
+  {
+   "date": "2026-11-24",
+   "symbol": "HPQ",
+   "name": "HP Inc.",
+   "time": "AMC",
+   "market_cap": 25196040155.47,
+   "eps_estimate": 0.74,
+   "eps_reported": 0.83,
+   "surprise_pct": 12.04
+  },
+  {
+   "date": "2026-11-24",
+   "symbol": "NTNX",
+   "name": "Nutanix, Inc.",
+   "time": "AMC",
+   "market_cap": 14888455370.59,
+   "eps_estimate": 0.61,
+   "eps_reported": 0.73,
+   "surprise_pct": 20.65
   },
   {
    "date": "2026-11-25",
