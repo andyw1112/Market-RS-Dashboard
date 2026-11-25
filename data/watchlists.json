@@ -32,6 +32,16 @@
  ],
  "stalk": [
   {
+   "sym": "XERS",
+   "tags": [],
+   "added": "2026-11-25",
+   "snap": {
+    "name": "Xeris Biopharma Holdings, Inc. - Common Stock",
+    "close": 17.67,
+    "atr50": 7.19
+   }
+  },
+  {
    "sym": "LQDA",
    "tags": [
     "flag"
