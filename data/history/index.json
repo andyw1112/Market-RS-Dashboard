@@ -38,5 +38,13 @@
   "thrust_ge_66": 53,
   "thrust_0": 23,
   "avg_thrust": 40.5
+ },
+ {
+  "date": "2026-11-24",
+  "count": 171,
+  "thrust_100": 16,
+  "thrust_ge_66": 36,
+  "thrust_0": 47,
+  "avg_thrust": 30.7
  }
 ]
