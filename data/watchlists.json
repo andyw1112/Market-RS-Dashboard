@@ -32,16 +32,6 @@
  ],
  "stalk": [
   {
-   "sym": "SGRY",
-   "tags": [],
-   "added": "2026-11-25",
-   "snap": {
-    "name": "Surgery Partners, Inc. - Common Stock",
-    "close": 26.83,
-    "atr50": 8.25
-   }
-  },
-  {
    "sym": "LQDA",
    "tags": [
     "flag"
