@@ -365,3 +365,43 @@ def test_meta_cache_fills_failed_lookups_and_rescales_cap():
     assert meta["OLD"]["cached"] == "2026-11-18"
     assert cache["NEW"]["close"] == 10.0 and cache["NEW"]["date"] == "2026-11-19"   # fresh lookup stored
     assert meta["GONE"] is None and cap_ok(meta["GONE"])                            # unknown -> kept
+
+
+# ---------------------------------------------------------------- missing daily bars (^HSI)
+def test_fill_missing_days_rebuilds_gap_from_60m():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from fetch import fill_missing_days
+    hk = ZoneInfo("Asia/Hong_Kong")
+    daily = pd.DataFrame({"Open": [100.0, 101.0], "High": [102.0, 103.0], "Low": [99.0, 100.0],
+                          "Close": [101.0, 102.0]}, index=pd.to_datetime(["2026-11-23", "2026-11-24"]))
+    # 60m bars in UTC: 11-25 HK session (missing from daily) + 11-26 (today, unfinished)
+    utc = pd.DatetimeIndex(["2026-11-25 01:30", "2026-11-25 05:00", "2026-11-25 07:00", "2026-11-26 01:30"], tz="UTC")
+    intra = pd.DataFrame({"Open": [102.0, 101.0, 100.5, 99.0], "High": [102.5, 101.5, 101.0, 99.5],
+                          "Low": [101.0, 100.0, 99.8, 98.5], "Close": [101.2, 100.6, 100.1, 99.2]}, index=utc)
+    out = fill_missing_days(daily, intra, hk, now=datetime(2026, 11, 26, 9, 0, tzinfo=hk))
+    assert list(out.index.date.astype(str)) == ["2026-11-23", "2026-11-24", "2026-11-25"]   # today not added
+    assert out.loc["2026-11-25"].tolist() == [102.0, 102.5, 99.8, 100.1]
+
+
+def test_sync_week_close_uses_newest_daily():
+    from fetch import sync_week_close
+    weekly = pd.DataFrame({"Open": [100.0], "High": [103.0], "Low": [99.0], "Close": [102.0]},
+                          index=pd.to_datetime(["2026-11-23"]))
+    daily = pd.DataFrame({"Open": [100.0, 101.0, 102.0], "High": [102.0, 103.0, 102.5],
+                          "Low": [99.0, 100.0, 98.0], "Close": [101.0, 102.0, 100.1]},
+                         index=pd.to_datetime(["2026-11-23", "2026-11-24", "2026-11-25"]))
+    out = sync_week_close(weekly, daily)
+    assert out["Close"].iloc[-1] == 100.1 and out["Low"].iloc[-1] == 98.0 and out["High"].iloc[-1] == 103.0
+
+
+def test_fill_missing_days_skips_futures_and_weekends():
+    from datetime import datetime
+    from fetch import ET, fill_missing_days
+    daily = pd.DataFrame({"Open": [1.0], "High": [1.0], "Low": [1.0], "Close": [1.0]},
+                         index=pd.to_datetime(["2026-11-20"]))
+    sunday = pd.DataFrame({"Open": [2.0], "High": [2.0], "Low": [2.0], "Close": [2.0]},
+                          index=pd.DatetimeIndex(["2026-11-22 23:00"], tz="UTC"))   # Sun 18:00 ET
+    now = datetime(2026, 11, 24, 9, 0, tzinfo=ET)
+    assert len(fill_missing_days(daily, sunday, ET, now=now, symbol="GC=F")) == 1
+    assert len(fill_missing_days(daily, sunday, ET, now=now, symbol="^DJI")) == 1

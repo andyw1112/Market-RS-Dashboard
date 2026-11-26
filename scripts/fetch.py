@@ -147,6 +147,65 @@ def fetch_ohlc(tickers: list[str], retries: int = 2) -> dict[str, pd.DataFrame]:
     return {t: drop_unfinished_session(df) for t, df in data.items()}
 
 
+def market_tz(symbol: str) -> ZoneInfo:
+    """Exchange time zone that Yahoo uses for the symbol's daily bar dates."""
+    if symbol == "^HSI" or symbol.endswith(".HK"):
+        return ZoneInfo("Asia/Hong_Kong")
+    if symbol.endswith("-USD"):  # crypto: UTC days
+        return ZoneInfo("UTC")
+    return ET
+
+
+def fill_missing_days(daily: pd.DataFrame, intraday: pd.DataFrame | None, tz: ZoneInfo,
+                      now: datetime | None = None, symbol: str = "") -> pd.DataFrame:
+    """Yahoo sometimes leaves whole days out of the daily series (seen for ^HSI) while the
+    60m bars are there. Rebuild those days (O = first open, H = max, L = min, C = last close).
+    Only finished days (before today in the market's time zone) and only after the first daily bar."""
+    if intraday is None or intraday.empty or daily.empty:
+        return daily
+    if symbol.endswith("=F"):  # futures sessions cross midnight; daily dates don't follow calendar days
+        return daily
+    weekdays_only = not symbol.endswith("-USD")  # crypto trades every day
+    idx = pd.to_datetime(intraday.index)
+    idx = idx.tz_convert(tz) if idx.tz is not None else idx.tz_localize("UTC").tz_convert(tz)
+    bars = intraday.copy()
+    bars.index = idx
+    bars = bars.dropna(subset=["Close"])
+    today = (now or datetime.now(tz)).astimezone(tz).date()
+    have = set(daily.index.date)
+    rows = {}
+    for day, g in bars.groupby(bars.index.date):
+        if day in have or day >= today or pd.Timestamp(day) < daily.index[0]                 or (weekdays_only and day.weekday() >= 5):
+            continue
+        rows[pd.Timestamp(day)] = {"Open": float(g["Open"].iloc[0]), "High": float(g["High"].max()),
+                                   "Low": float(g["Low"].min()), "Close": float(g["Close"].iloc[-1])}
+    if not rows:
+        return daily
+    add = pd.DataFrame.from_dict(rows, orient="index")[[c for c in daily.columns if c in ("Open", "High", "Low", "Close")]]
+    log.warning("%s: rebuilt %d missing daily bar(s) from 60m data: %s", symbol, len(add),
+                ", ".join(d.date().isoformat() for d in add.index))
+    return pd.concat([daily, add]).sort_index()
+
+
+def _intraday(symbols: list[str]) -> dict[str, pd.DataFrame]:
+    try:
+        raw = yf.download(symbols, period="1mo", interval="60m", auto_adjust=False, actions=False,
+                          group_by="ticker", threads=True, progress=False)
+    except Exception as e:  # noqa: BLE001
+        log.warning("index condition 60m failed: %s", e)
+        return {}
+    out = {}
+    multi = isinstance(raw.columns, pd.MultiIndex)
+    for s in symbols:
+        try:
+            df = raw[s] if multi else raw
+        except KeyError:
+            continue
+        if not df.empty:
+            out[s] = df
+    return out
+
+
 def fetch_condition(symbols: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
     """Daily (3y) + weekly (10y) bars for the "Index condition" panel.
 
@@ -154,6 +213,7 @@ def fetch_condition(symbols: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
     unfinished-session trimming here. Weekly 200 EMA needs a long warm-up, hence 10y.
     """
     out: dict[str, dict[str, pd.DataFrame]] = {s: {} for s in symbols}
+    intra = _intraday(symbols)
     for key, period, interval in (("daily", "3y", "1d"), ("weekly", "10y", "1wk")):
         try:
             raw = yf.download(symbols, period=period, interval=interval, auto_adjust=False,
@@ -164,6 +224,7 @@ def fetch_condition(symbols: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
         frames = _split(raw, symbols)
         if key == "daily":
             frames = patch_missing_closes(frames)
+            frames = {s: fill_missing_days(df, intra.get(s), market_tz(s), symbol=s) for s, df in frames.items()}
         for s, df in frames.items():
             if key == "weekly" and needs_close(df):
                 d = out[s].get("daily")  # this week's bar: use the latest daily close
@@ -172,5 +233,23 @@ def fetch_condition(symbols: list[str]) -> dict[str, dict[str, pd.DataFrame]]:
                     df.iloc[-1, df.columns.get_loc("Close")] = float(d["Close"].iloc[-1])
                 else:
                     df = df.iloc[:-1]
+            if key == "weekly":
+                df = sync_week_close(df, out[s].get("daily"))
             out[s][key] = df
+    return out
+
+
+def sync_week_close(weekly: pd.DataFrame, daily: pd.DataFrame | None) -> pd.DataFrame:
+    """Keep the current weekly bar's Close in line with the newest daily close (the daily
+    series may have bars the weekly one doesn't have yet, e.g. rebuilt from 60m data)."""
+    if daily is None or daily.empty or weekly.empty:
+        return weekly
+    wk, d = weekly.index[-1], daily.index[-1]
+    if not (wk <= d < wk + pd.Timedelta(days=7)):
+        return weekly
+    out = weekly.copy()
+    week = daily[daily.index >= wk]
+    out.iloc[-1, out.columns.get_loc("Close")] = float(daily["Close"].iloc[-1])
+    out.iloc[-1, out.columns.get_loc("High")] = max(float(out["High"].iloc[-1]), float(week["High"].max()))
+    out.iloc[-1, out.columns.get_loc("Low")] = min(float(out["Low"].iloc[-1]), float(week["Low"].min()))
     return out
