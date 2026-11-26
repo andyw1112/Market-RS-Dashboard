@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-23",
  "week_end": "2026-11-27",
- "generated_at": "2026-11-25T09:52:03+00:00",
+ "generated_at": "2026-11-26T01:14:39+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -25,17 +25,17 @@
    "symbol": "CRWD",
    "name": "CrowdStrike Holdings, Inc.",
    "time": "BMO",
-   "market_cap": 217311583047.09,
+   "market_cap": 215703854990.43,
    "eps_estimate": 0.31,
    "eps_reported": 0.34,
-   "surprise_pct": 9.17
+   "surprise_pct": 9.18
   },
   {
    "date": "2026-11-23",
    "symbol": "ZS",
    "name": "Zscaler, Inc.",
    "time": "BMO",
-   "market_cap": 38015424302.23,
+   "market_cap": 37890687603.1,
    "eps_estimate": 1.16,
    "eps_reported": 1.23,
    "surprise_pct": 5.94
@@ -45,7 +45,7 @@
    "symbol": "HPE",
    "name": "Hewlett Packard Enterprise Company",
    "time": "AMC",
-   "market_cap": 53350807645.01,
+   "market_cap": 53719119598.39,
    "eps_estimate": 1.29,
    "eps_reported": 1.43,
    "surprise_pct": 11.01
@@ -55,7 +55,7 @@
    "symbol": "A",
    "name": "Agilent Technologies, Inc.",
    "time": "AMC",
-   "market_cap": 51739584490.61,
+   "market_cap": 50293210300.71,
    "eps_estimate": 1.73,
    "eps_reported": 1.86,
    "surprise_pct": 7.71
@@ -65,7 +65,7 @@
    "symbol": "ZM",
    "name": "Zoom Communications, Inc.",
    "time": "AMC",
-   "market_cap": 25793680497.63,
+   "market_cap": 25840364733.8,
    "eps_estimate": null,
    "eps_reported": null,
    "surprise_pct": null
@@ -75,7 +75,7 @@
    "symbol": "J",
    "name": "Jacobs Solutions Inc.",
    "time": "AMC",
-   "market_cap": 17945931485.92,
+   "market_cap": 16898917436.13,
    "eps_estimate": 2.12,
    "eps_reported": 2.2,
    "surprise_pct": 3.57
@@ -85,7 +85,7 @@
    "symbol": "ADI",
    "name": "Analog Devices, Inc.",
    "time": "BMO",
-   "market_cap": 151644768186.86,
+   "market_cap": 160781931855.21,
    "eps_estimate": 3.88,
    "eps_reported": 4.06,
    "surprise_pct": 4.56
@@ -95,7 +95,7 @@
    "symbol": "MDT",
    "name": "Medtronic plc",
    "time": "BMO",
-   "market_cap": 122963521852.44,
+   "market_cap": 122873982590.5,
    "eps_estimate": 1.33,
    "eps_reported": 1.34,
    "surprise_pct": 0.6
@@ -105,7 +105,7 @@
    "symbol": "DLTR",
    "name": "Dollar Tree, Inc.",
    "time": "BMO",
-   "market_cap": 29017024595.15,
+   "market_cap": 28298810778.6,
    "eps_estimate": 0.92,
    "eps_reported": 1.16,
    "surprise_pct": 25.43
@@ -115,7 +115,7 @@
    "symbol": "BBY",
    "name": "Best Buy Co., Inc.",
    "time": "BMO",
-   "market_cap": 20893073850.79,
+   "market_cap": 21513867644.86,
    "eps_estimate": 1.49,
    "eps_reported": 1.62,
    "surprise_pct": 8.64
@@ -125,37 +125,37 @@
    "symbol": "BURL",
    "name": "Burlington Stores, Inc.",
    "time": "BMO",
-   "market_cap": 15348264516.26,
+   "market_cap": 15707567508.34,
    "eps_estimate": 1.72,
    "eps_reported": 1.7,
    "surprise_pct": -1.12
   },
   {
    "date": "2026-11-24",
-   "symbol": "SJM",
-   "name": "The J. M. Smucker Company",
-   "time": "BMO",
-   "market_cap": 13977814147.55,
-   "eps_estimate": 2.56,
-   "eps_reported": 3.2,
-   "surprise_pct": 24.78
-  },
-  {
-   "date": "2026-11-24",
    "symbol": "DKS",
    "name": "DICK'S Sporting Goods, Inc.",
    "time": "BMO",
-   "market_cap": 13620880419.69,
+   "market_cap": 14102862190.38,
    "eps_estimate": 1.41,
    "eps_reported": 1.94,
    "surprise_pct": 37.61
   },
   {
    "date": "2026-11-24",
+   "symbol": "SJM",
+   "name": "The J. M. Smucker Company",
+   "time": "BMO",
+   "market_cap": 13893422920.18,
+   "eps_estimate": 2.56,
+   "eps_reported": 3.2,
+   "surprise_pct": 24.78
+  },
+  {
+   "date": "2026-11-24",
    "symbol": "DELL",
    "name": "Dell Technologies Inc.",
    "time": "AMC",
-   "market_cap": 187253219211.61,
+   "market_cap": 188874533962.72,
    "eps_estimate": 6.59,
    "eps_reported": 9.45,
    "surprise_pct": 43.46
@@ -165,7 +165,7 @@
    "symbol": "ADSK",
    "name": "Autodesk, Inc.",
    "time": "AMC",
-   "market_cap": 53441299362.18,
+   "market_cap": 51578065765.38,
    "eps_estimate": 3.07,
    "eps_reported": 3.2,
    "surprise_pct": 4.29
@@ -175,7 +175,7 @@
    "symbol": "WDAY",
    "name": "Workday, Inc.",
    "time": "AMC",
-   "market_cap": 43194428970.34,
+   "market_cap": 43486040588.38,
    "eps_estimate": 2.74,
    "eps_reported": 2.82,
    "surprise_pct": 2.76
@@ -185,7 +185,7 @@
    "symbol": "HPQ",
    "name": "HP Inc.",
    "time": "AMC",
-   "market_cap": 25196040155.47,
+   "market_cap": 28090788340.34,
    "eps_estimate": 0.74,
    "eps_reported": 0.83,
    "surprise_pct": 12.04
@@ -195,7 +195,7 @@
    "symbol": "NTNX",
    "name": "Nutanix, Inc.",
    "time": "AMC",
-   "market_cap": 14888455370.59,
+   "market_cap": 12627504494.82,
    "eps_estimate": 0.61,
    "eps_reported": 0.73,
    "surprise_pct": 20.65
@@ -205,20 +205,20 @@
    "symbol": "DE",
    "name": "Deere & Company",
    "time": "BMO",
-   "market_cap": 165485295502.18,
-   "eps_estimate": 4.06,
-   "eps_reported": null,
-   "surprise_pct": null
+   "market_cap": 172835286866.36,
+   "eps_estimate": 4.05,
+   "eps_reported": 3.89,
+   "surprise_pct": -4.04
   },
   {
    "date": "2026-11-25",
    "symbol": "LI",
    "name": "Li Auto Inc.",
    "time": "BMO",
-   "market_cap": 10456836674.7,
+   "market_cap": 11610020851.08,
    "eps_estimate": -0.84,
-   "eps_reported": null,
-   "surprise_pct": null
+   "eps_reported": -0.12,
+   "surprise_pct": 85.64
   }
  ]
 }
