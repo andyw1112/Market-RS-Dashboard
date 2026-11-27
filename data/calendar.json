@@ -1,7 +1,7 @@
 {
  "week_start": "2026-11-23",
  "week_end": "2026-11-27",
- "generated_at": "2026-11-26T01:14:39+00:00",
+ "generated_at": "2026-11-27T01:14:14+00:00",
  "earnings_min_cap": 10000000000.0,
  "economic": [
   {
@@ -65,7 +65,7 @@
    "symbol": "ZM",
    "name": "Zoom Communications, Inc.",
    "time": "AMC",
-   "market_cap": 25840364733.8,
+   "market_cap": 25645858551.4,
    "eps_estimate": null,
    "eps_reported": null,
    "surprise_pct": null
@@ -125,7 +125,7 @@
    "symbol": "BURL",
    "name": "Burlington Stores, Inc.",
    "time": "BMO",
-   "market_cap": 15707567508.34,
+   "market_cap": 15636446444.08,
    "eps_estimate": 1.72,
    "eps_reported": 1.7,
    "surprise_pct": -1.12
@@ -145,7 +145,7 @@
    "symbol": "SJM",
    "name": "The J. M. Smucker Company",
    "time": "BMO",
-   "market_cap": 13893422920.18,
+   "market_cap": 13910092449.95,
    "eps_estimate": 2.56,
    "eps_reported": 3.2,
    "surprise_pct": 24.78
@@ -175,7 +175,7 @@
    "symbol": "WDAY",
    "name": "Workday, Inc.",
    "time": "AMC",
-   "market_cap": 43486040588.38,
+   "market_cap": 42944720581.05,
    "eps_estimate": 2.74,
    "eps_reported": 2.82,
    "surprise_pct": 2.76
