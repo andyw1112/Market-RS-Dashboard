@@ -1,224 +1,279 @@
 {
- "week_start": "2026-11-23",
- "week_end": "2026-11-27",
- "generated_at": "2026-11-28T01:14:19+00:00",
+ "week_start": "2026-11-30",
+ "week_end": "2026-12-04",
+ "generated_at": "2026-11-28T08:55:07+00:00",
  "earnings_min_cap": 10000000000.0,
- "economic": [
-  {
-   "datetime": "2026-11-25T08:30:00-05:00",
-   "title": "Core PCE Price Index m/m",
-   "impact": "High",
-   "forecast": "0.3%",
-   "previous": "0.3%"
-  },
-  {
-   "datetime": "2026-11-25T08:30:00-05:00",
-   "title": "Prelim GDP q/q",
-   "impact": "High",
-   "forecast": "3.5%",
-   "previous": "3.4%"
-  }
- ],
+ "economic": [],
  "earnings": [
   {
-   "date": "2026-11-23",
-   "symbol": "CRWD",
-   "name": "CrowdStrike Holdings, Inc.",
+   "date": "2026-11-30",
+   "symbol": "RBRK",
+   "name": "Rubrik, Inc.",
+   "time": "AMC",
+   "market_cap": 23235986690.11,
+   "eps_estimate": 0.08,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "CPRT",
+   "name": "Copart, Inc.",
    "time": "BMO",
-   "market_cap": 223845561216.07,
-   "eps_estimate": 0.31,
-   "eps_reported": 0.34,
-   "surprise_pct": 9.18
+   "market_cap": 30755750837.97,
+   "eps_estimate": 0.39,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-23",
-   "symbol": "ZS",
-   "name": "Zscaler, Inc.",
+   "date": "2026-12-01",
+   "symbol": "MRVL",
+   "name": "Marvell Technology, Inc.",
+   "time": "AMC",
+   "market_cap": 126453091015.37,
+   "eps_estimate": 1.1,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "OKTA",
+   "name": "Okta, Inc.",
+   "time": "AMC",
+   "market_cap": 36268350896.6,
+   "eps_estimate": 0.93,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "NTAP",
+   "name": "NetApp, Inc.",
+   "time": "AMC",
+   "market_cap": 33915669233.7,
+   "eps_estimate": 2.61,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "MDB",
+   "name": "MongoDB, Inc.",
+   "time": "AMC",
+   "market_cap": 25747868078.51,
+   "eps_estimate": 1.61,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "TCOM",
+   "name": "Trip.com Group Limited",
+   "time": "AMC",
+   "market_cap": 25622704618.41,
+   "eps_estimate": 8.22,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-01",
+   "symbol": "CRDO",
+   "name": "Credo Technology Group Holding Ltd",
+   "time": "AMC",
+   "market_cap": 21721603105.9,
+   "eps_estimate": 1.28,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-02",
+   "symbol": "BMO",
+   "name": "Bank of Montreal",
    "time": "BMO",
-   "market_cap": 39307116686.36,
-   "eps_estimate": 1.16,
-   "eps_reported": 1.23,
-   "surprise_pct": 5.94
+   "market_cap": 110603073357.43,
+   "eps_estimate": 3.71,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-23",
-   "symbol": "HPE",
-   "name": "Hewlett Packard Enterprise Company",
-   "time": "AMC",
-   "market_cap": 56272157791.14,
-   "eps_estimate": 1.29,
-   "eps_reported": 1.43,
-   "surprise_pct": 11.01
+   "date": "2026-12-02",
+   "symbol": "BNS",
+   "name": "The Bank of Nova Scotia",
+   "time": "BMO",
+   "market_cap": 103527423175.66,
+   "eps_estimate": 2.16,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-23",
-   "symbol": "A",
-   "name": "Agilent Technologies, Inc.",
+   "date": "2026-12-02",
+   "symbol": "CRM",
+   "name": "Salesforce, Inc.",
    "time": "AMC",
-   "market_cap": 50746988030.89,
-   "eps_estimate": 1.73,
-   "eps_reported": 1.86,
-   "surprise_pct": 7.71
+   "market_cap": 163126835525.51,
+   "eps_estimate": 3.45,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-23",
-   "symbol": "ZM",
-   "name": "Zoom Communications, Inc.",
+   "date": "2026-12-02",
+   "symbol": "SNOW",
+   "name": "Snowflake Inc.",
    "time": "AMC",
-   "market_cap": 25900696868.6,
+   "market_cap": 97475115014.65,
+   "eps_estimate": 0.6,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-02",
+   "symbol": "FIVE",
+   "name": "Five Below, Inc.",
+   "time": "AMC",
+   "market_cap": 11844325056.3,
+   "eps_estimate": 0.26,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-02",
+   "symbol": "NTSK",
+   "name": "Netskope, Inc.",
+   "time": "AMC",
+   "market_cap": 11644750818.0,
+   "eps_estimate": -0.03,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "RY",
+   "name": "Royal Bank of Canada",
+   "time": "BMO",
+   "market_cap": 262114096379.64,
+   "eps_estimate": 4.15,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "TD",
+   "name": "The Toronto-Dominion Bank",
+   "time": "BMO",
+   "market_cap": 190899657761.19,
+   "eps_estimate": 2.49,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "CM",
+   "name": "Canadian Imperial Bank of Commerce",
+   "time": "BMO",
+   "market_cap": 94461603696.72,
+   "eps_estimate": 2.52,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "KR",
+   "name": "The Kroger Co.",
+   "time": "BMO",
+   "market_cap": 40963232592.47,
+   "eps_estimate": 1.03,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "DG",
+   "name": "Dollar General Corporation",
+   "time": "BMO",
+   "market_cap": 30630434315.68,
+   "eps_estimate": 0.93,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "BF-A",
+   "name": "Brown-Forman Corporation",
+   "time": "BMO",
+   "market_cap": 13839346162.38,
    "eps_estimate": null,
    "eps_reported": null,
    "surprise_pct": null
   },
   {
-   "date": "2026-11-23",
-   "symbol": "J",
-   "name": "Jacobs Solutions Inc.",
+   "date": "2026-12-03",
+   "symbol": "HRL",
+   "name": "Hormel Foods Corporation",
+   "time": "BMO",
+   "market_cap": 12503969798.1,
+   "eps_estimate": 0.37,
+   "eps_reported": null,
+   "surprise_pct": null
+  },
+  {
+   "date": "2026-12-03",
+   "symbol": "VEEV",
+   "name": "Veeva Systems Inc.",
    "time": "AMC",
-   "market_cap": 17024361529.09,
-   "eps_estimate": 2.12,
-   "eps_reported": 2.2,
-   "surprise_pct": 3.57
+   "market_cap": 43974444648.21,
+   "eps_estimate": 2.34,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-24",
-   "symbol": "ADI",
-   "name": "Analog Devices, Inc.",
-   "time": "BMO",
-   "market_cap": 167006038898.0,
-   "eps_estimate": 3.88,
-   "eps_reported": 4.06,
-   "surprise_pct": 4.56
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "MDT",
-   "name": "Medtronic plc",
-   "time": "BMO",
-   "market_cap": 122042550769.24,
-   "eps_estimate": 1.33,
-   "eps_reported": 1.34,
-   "surprise_pct": 0.6
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "DLTR",
-   "name": "Dollar Tree, Inc.",
-   "time": "BMO",
-   "market_cap": 27614625484.53,
-   "eps_estimate": 0.92,
-   "eps_reported": 1.16,
-   "surprise_pct": 25.43
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "BBY",
-   "name": "Best Buy Co., Inc.",
-   "time": "BMO",
-   "market_cap": 21849431641.64,
-   "eps_estimate": 1.49,
-   "eps_reported": 1.62,
-   "surprise_pct": 8.64
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "BURL",
-   "name": "Burlington Stores, Inc.",
-   "time": "BMO",
-   "market_cap": 15826540546.56,
-   "eps_estimate": 1.72,
-   "eps_reported": 1.7,
-   "surprise_pct": -1.12
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "DKS",
-   "name": "DICK'S Sporting Goods, Inc.",
-   "time": "BMO",
-   "market_cap": 14620415397.62,
-   "eps_estimate": 1.41,
-   "eps_reported": 1.94,
-   "surprise_pct": 37.61
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "SJM",
-   "name": "The J. M. Smucker Company",
-   "time": "BMO",
-   "market_cap": 13567848453.14,
-   "eps_estimate": 2.56,
-   "eps_reported": 3.2,
-   "surprise_pct": 24.78
-  },
-  {
-   "date": "2026-11-24",
-   "symbol": "DELL",
-   "name": "Dell Technologies Inc.",
+   "date": "2026-12-03",
+   "symbol": "ULTA",
+   "name": "Ulta Beauty, Inc.",
    "time": "AMC",
-   "market_cap": 201527203807.03,
-   "eps_estimate": 6.59,
-   "eps_reported": 9.45,
-   "surprise_pct": 43.46
+   "market_cap": 27471675117.5,
+   "eps_estimate": 4.6,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-24",
-   "symbol": "ADSK",
-   "name": "Autodesk, Inc.",
+   "date": "2026-12-03",
+   "symbol": "IOT",
+   "name": "Samsara Inc.",
    "time": "AMC",
-   "market_cap": 52391041015.62,
-   "eps_estimate": 3.07,
-   "eps_reported": 3.2,
-   "surprise_pct": 4.29
+   "market_cap": 23494480359.59,
+   "eps_estimate": 0.19,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-24",
-   "symbol": "WDAY",
-   "name": "Workday, Inc.",
+   "date": "2026-12-03",
+   "symbol": "DOCU",
+   "name": "DocuSign, Inc.",
    "time": "AMC",
-   "market_cap": 43299338256.84,
-   "eps_estimate": 2.74,
-   "eps_reported": 2.82,
-   "surprise_pct": 2.76
+   "market_cap": 15084896729.81,
+   "eps_estimate": 1.18,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-24",
-   "symbol": "HPQ",
-   "name": "HP Inc.",
+   "date": "2026-12-03",
+   "symbol": "GWRE",
+   "name": "Guidewire Software, Inc.",
    "time": "AMC",
-   "market_cap": 28992581029.37,
-   "eps_estimate": 0.74,
-   "eps_reported": 0.83,
-   "surprise_pct": 12.04
+   "market_cap": 12453347953.22,
+   "eps_estimate": 0.72,
+   "eps_reported": null,
+   "surprise_pct": null
   },
   {
-   "date": "2026-11-24",
-   "symbol": "NTNX",
-   "name": "Nutanix, Inc.",
+   "date": "2026-12-03",
+   "symbol": "COO",
+   "name": "The Cooper Companies, Inc.",
    "time": "AMC",
-   "market_cap": 12682051159.5,
-   "eps_estimate": 0.61,
-   "eps_reported": 0.73,
-   "surprise_pct": 20.65
-  },
-  {
-   "date": "2026-11-25",
-   "symbol": "DE",
-   "name": "Deere & Company",
-   "time": "BMO",
-   "market_cap": 176399726913.82,
-   "eps_estimate": 4.05,
-   "eps_reported": 3.89,
-   "surprise_pct": -4.04
-  },
-  {
-   "date": "2026-11-25",
-   "symbol": "LI",
-   "name": "Li Auto Inc.",
-   "time": "BMO",
-   "market_cap": 12137749029.22,
-   "eps_estimate": -0.84,
-   "eps_reported": -0.12,
-   "surprise_pct": 85.64
+   "market_cap": 11842871478.2,
+   "eps_estimate": 1.07,
+   "eps_reported": null,
+   "surprise_pct": null
   }
  ]
 }
